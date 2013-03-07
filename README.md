@@ -1,52 +1,40 @@
-ZendSkeletonApplication
+StoneMor Security API
 =======================
 
 Introduction
 ------------
-This is a simple, skeleton application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
-
+This RESTful API is accessible to authorized clients only and provides
+credential and role information. The API is built with Zend
+Framework 2.  
 
 Installation
 ------------
+ - Host:    keyserver.stonemor.com
+ - OS:      Linux (CentOS)
+ - API url: securityapi.stonemor.com
 
-Using Composer (recommended)
+Current Implementations
+-----------------------
+DIPS: (Deposit, Invoice, PCard, Scanning).
+
+ - Client: MTS IntellaFlow
+ - Calls
+    - dips/roles/[username]/[appname]
+    - dips/roles/[location]/[username]
+ - Returns
+    - JSON object containing a list of roles from Active Directory
+    - JSON object containing a list of approvers from MySQL database
+
+Upgrading ZF2 vendor library
 ----------------------------
-The recommended way to get a working copy of this project is to clone the repository
-and use `composer` to install dependencies using the `create-project` command:
+Sometimes it is a good idea to upgrade the ZF2 to bring the latest
+stable updates, bug fixes and security upate.  ZF2 utilized the [**composer**](http://getcomposer.com)
+package dependency manager.  Below are the steps to upgrade a ZF2
+library
 
-    curl -s https://getcomposer.org/installer | php --
-    php composer.phar create-project --repository-url="http://packages.zendframework.com" zendframework/skeleton-application path/to/install
-
-Alternately, clone the repository and manually invoke `composer` using the shipped
-`composer.phar`:
-
-    cd my/project/dir
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git
-    cd ZendSkeletonApplication
-    php composer.phar self-update
-    php composer.phar install
-
-(The `self-update` directive is to ensure you have an up-to-date `composer.phar`
-available.)
-
-Another alternative for downloading the project is to grab it via `curl`, and
-then pass it to `tar`:
-
-    cd my/project/dir
-    curl -#L https://github.com/zendframework/ZendSkeletonApplication/tarball/master | tar xz --strip-components=1
-
-You would then invoke `composer` to install dependencies per the previous
-example.
-
-Using Git submodules
---------------------
-Alternatively, you can install using native git submodules:
-
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git --recursive
-
-Virtual Host
-------------
-Afterwards, set up a virtual host to point to the public/ directory of the
-project and you should be ready to go!
+ - On a development server or latop
+   - cd into the project root directory
+   - php composer.phar update
+ 
+ - Once the project is updated deploy project to test.  Run test suite
+ - All is well deploy to production
