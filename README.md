@@ -28,7 +28,7 @@ DIPS: (Deposit, Invoice, PCard, Scanning).
 Upgrading ZF2 vendor library
 ----------------------------
 Sometimes it is a good idea to upgrade the ZF2 to bring the latest
-stable updates, bug fixes and security upate.  ZF2 utilized the [**composer**](http://getcomposer.com)
+stable updates, bug fixes and security upate.  ZF2 utilized the [composer](http://getcomposer.org)
 package dependency manager.  Below are the steps to upgrade a ZF2
 library
 
