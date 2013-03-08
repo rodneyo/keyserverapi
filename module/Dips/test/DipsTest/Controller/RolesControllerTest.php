@@ -8,6 +8,7 @@ use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\Ldap\Ldap;
 use PHPUnit_Framework_TestCase;
  
 class RolesControllerTest extends PHPUnit_Framework_TestCase
@@ -17,6 +18,7 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
     protected $response;
     protected $routeMatch;
     protected $event;
+    protected $ldapOptions;
  
     protected function setUp()
     {
@@ -28,6 +30,7 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $config = $serviceManager->get('Config');
         $routerConfig = isset($config['router']) ? $config['router'] : array();
         $router = HttpRouter::factory($routerConfig);
+        $this->ldapOptions = $config;
         $this->event->setRouter($router);
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
@@ -66,14 +69,18 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
        $this->assertEquals(501, $response->getStatusCode()); 
     }
 
-    public function testIsGetRolesRequestValid()
+    /* This should probably go into a Model test */
+    public function testCanConnectToAd()
     {
-       //$this->request->setMethod('GET');
-       //$this->routeMatch->setParam('action', 'get-roles');
-       $result = $this->controller->dispatch($this->request);
-       $response = $this->controller->getResponse();
+      $ldap = new Ldap($this->ldapOptions['ldap']['server1']);
+      $this->assertInstanceOf('Zend\Ldap\Ldap', $ldap, 'Not an instance of Zend Ldap');
 
-       $this->assertEquals(200, $response->getStatusCode()); 
-       var_dump($response->getContent());
+      $ldap->bind($this->ldapOptions['client']['username'],
+                  $this->ldapOptions['client']['password']
+                 );
+      $acctName = $ldap->getCanonicalAccountName($this->ldapOptions['client']['username']);
+      $expectedAcctName = 'STONEMOR\\' . $this->ldapOptions['client']['username'];
+
+      $this->assertTrue($acctName === $expectedAcctName, 'Could not bind to AD');
     }
 }

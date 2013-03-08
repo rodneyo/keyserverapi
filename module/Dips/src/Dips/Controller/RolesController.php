@@ -32,9 +32,8 @@ class RolesController extends AbstractRestfulController
          *     uname, appname
          */
       $config = $this->getServiceLocator()->get('config');
-      $ldap = new Ldap($config['ldap']);
+      $ldap = new Ldap($config);
 
-      var_dump($ldap->getLdapInstance());
         $data = array(
         array('roles' => array(
           'admin',

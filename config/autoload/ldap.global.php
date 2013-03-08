@@ -18,7 +18,7 @@ return array(
       'useStartTls' => true,
       'accountDomainName' => 'stonemor.com',
       'accountDomainNameShort' => 'STONEMOR',
-      'accountDomainCanonicalForm' => 3,
+      'accountCanonicalForm' => 3,
       'baseDn' => 'DC=stonemor,DC=com',
     ),
     'server2' => array(
@@ -26,7 +26,7 @@ return array(
       'useStartTls' => true,
       'accountDomainName' => 'stonemor.com',
       'accountDomainNameShort' => 'STONEMOR',
-      'accountDomainCanonicalForm' => 3,
+      'accountCanonicalForm' => 3,
       'baseDn' => 'DC=stonemor,DC=com',
     ),
     'server3' => array(
@@ -34,7 +34,7 @@ return array(
       'useStartTls' => true,
       'accountDomainName' => 'stonemor.com',
       'accountDomainNameShort' => 'STONEMOR',
-      'accountDomainCanonicalForm' => 3,
+      'accountCanonicalForm' => 3,
       'baseDn' => 'DC=stonemor,DC=com',
     ),
   )
