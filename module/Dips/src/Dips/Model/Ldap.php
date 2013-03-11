@@ -32,20 +32,6 @@ class Ldap
         $this->setUserName($config);
         $this->setUserPassword($config);
         $this->bindToServer($this->ldapOptions);
-
-        /*
-        $this->auth = new AuthService();
-
-        $this->adapter = new AuthAdapter($this->getLdapOptions(),
-                                         $this->getUserName(),
-                                         $this->getUserPassword() 
-        );
-
-        $result = $this->auth->authenticate($this->adapter);
-        var_dump(get_class_methods($result));
-        var_dump($result->getMessages());
-         */
-
     }
 
     /* protected bindToServer(array $options) {{{ */ 
