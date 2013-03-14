@@ -9,8 +9,7 @@
  */
 return array(
     'modules' => array(
-        'Application',
-        'Dips'
+        'Roles',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
