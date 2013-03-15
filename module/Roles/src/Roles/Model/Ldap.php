@@ -23,6 +23,7 @@ class Ldap
     protected $userPassword;
     protected $auth;
     protected $adapter;
+    protected $roles = array();
 
     public function __construct(array $config)
     {
@@ -59,29 +60,47 @@ class Ldap
           }
         }
     }
-    /* }}} */
 
+    /* public findRolesForUser($user, $appName)
+    /**
+     * findRolesForUser
+     * return an array of assigned roles for user or null array if no roles
+     * 
+     * @param string user 
+     * @param string $appName 
+     * @access public
+     * @return array
+     */
     public function findRolesForUser($user, $appName)
     {
-        $filter = LdapFilter::equals('samaccountname', $user);
-        $search_string = "(&(objectCategory=person){$filter})";
+        $f1 = LdapFilter::equals('objectCategory', 'person');
+        $f2 = LdapFilter::equals('samaccountname', $user);
+        $searchString = LdapFilter::andFilter($f1, $f2);
 
-        $results = $this->ldap->searchEntries($search_string);
+        $appSearchPattern = '/.*OU=' . strtoupper($appName) . '.*/';
+        $roleSearchPattern = '/CN=(.*?),/';
+
+        $results = $this->ldap->searchEntries($searchString);
 
         if (count($results) > 0) {
-          foreach ($results as $result) {
-            foreach ($result as $key => $value) {
-              if ($key === 'memberof') {
-                  foreach ($result[$key] as $entry) {
-                    preg_match('/CN=(.*?),/', $entry, $cnMatches);
-                    $groups[] = $cnMatches[1];
-                  }
+          $members = $results[0]['memberof'];
+
+          foreach ($members as $member) {
+            if (preg_match($appSearchPattern, $member, $appMatch)) {
+              if (preg_match($roleSearchPattern, $appMatch[0], $roleMatch)) {
+                $this->roles[] = $roleMatch[1];
               }
             }
           }
-          return array('roles' => $groups);
+
+          if (count($this->roles) > 0) {
+            return array('roles' => $this->roles);
+          } else {
+            return array('roles');
+          }
+
         } else {
-          return array('roles' => '');
+          return array('roles');
         }
     }
 
@@ -105,21 +124,51 @@ class Ldap
         return $this->ldapOptions;
     }
 
+    /* public setUserName(array $config)
+    /**
+     * setUserName
+     * 
+     * @param array $config 
+     * @access public
+     * @return void
+     */
     public function setUserName(array $config)
     {
         $this->userName = $config['client']['username'];
     }
 
+    /* public getUserName()
+    /**
+     * getUserName
+     * 
+     * @access public
+     * @return string
+     */
     public function getUserName()
     {
         return $this->userName;
     }
 
+    /* public setUserPassword($config)
+    /**
+     * setUserPassword
+     * 
+     * @param mixed $config 
+     * @access public
+     * @return void
+     */
     public function setUserPassword($config)
     {
         $this->userPassword = $config['client']['password'];
     }
 
+    /* public getUserPassword()
+    /**
+     * getUserPassword
+     * 
+     * @access public
+     * @return string
+     */
     public function getUserPassword()
     {
       return $this->userPassword;

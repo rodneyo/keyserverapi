@@ -19,7 +19,7 @@ return array(
                   'route' => '/roles/:apikey/:uname/:appname',
                   'constraints' => array(
                     'apikey' => '[a-zA-Z0-9]+',
-                    'uname' => '[a-zA-Z]+',
+                    'uname' => '[a-zA-Z].+',
                     'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
                  ),
                  'defaults' => array(
