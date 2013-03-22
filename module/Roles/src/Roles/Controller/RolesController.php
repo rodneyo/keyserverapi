@@ -13,6 +13,7 @@ class RolesController extends AbstractRestfulController
                                     'exception' => 'API Error',
                                     'message' => 'Method not implemented'
                                 );
+
     public function __construct()
     {
       // register a custom handler for roles
@@ -21,6 +22,14 @@ class RolesController extends AbstractRestfulController
 
     }
 
+    /* public getRoles($mvcEvent)
+    /**
+     * getRoles
+     * 
+     * @param  object $mvcEvent 
+     * @access public
+     * @return json
+     */
     public function getRoles($mvcEvent)
     {
         $roleParams = $this->getIdentifier($mvcEvent->getRouteMatch(), $mvcEvent->getRequest());
@@ -28,6 +37,7 @@ class RolesController extends AbstractRestfulController
          * check api-key (apikey)
          * if valid query ad to get roles and locations
          *     uname, appname
+         * Also check request timestamp against server to prevent replay
          */
       $config = $this->getServiceLocator()->get('config');
       $ldap = new Ldap($config);

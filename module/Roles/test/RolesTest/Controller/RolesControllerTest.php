@@ -5,6 +5,7 @@ use RolesTest\Bootstrap;
 use Roles\Controller\RolesController;
 use Zend\Http\Request;
 use Zend\Http\Response;
+use Zend\Http\Headers;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;

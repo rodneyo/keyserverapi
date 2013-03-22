@@ -23,6 +23,11 @@ class Module
         );
     }
 
+    public function getServiceConfig()
+    {
+        return array ();
+    }
+
     public function onBootstrap(MvcEvent $event)
     {
       $application = $event->getTarget();
