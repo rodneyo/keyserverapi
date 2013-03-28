@@ -4,9 +4,11 @@ namespace Roles\Controller;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 use Roles\Model\Ldap;
+use Roles\Model\Apikeys\AppTable;
 
 class RolesController extends AbstractRestfulController
 {
+    protected $appTable;
     protected $allowedHttpMethods = array('GET');
     protected $errorResponseCode = 501;
     protected $jsonErrorResponse = array(
@@ -20,6 +22,15 @@ class RolesController extends AbstractRestfulController
       $rolesHandler = array($this, 'getRoles');
       $this->addHttpMethodHandler('get', $rolesHandler);
 
+    }
+
+    public function getAppTable()
+    {
+        if (!$this->appTable) {
+          $sm = $this->getServiceLocator();
+          $this->appTable = $sm->get('Roles\Model\Apikeys\AppTable');
+        }
+        return $this->appTable;
     }
 
     /* public getRoles($mvcEvent)
@@ -39,6 +50,8 @@ class RolesController extends AbstractRestfulController
          *     uname, appname
          * Also check request timestamp against server to prevent replay
          */
+      $stoneMorHeader = $this->getRequest()->getHeader('x-stonemorapi')->getFieldValue();
+
       $config = $this->getServiceLocator()->get('config');
       $ldap = new Ldap($config);
 

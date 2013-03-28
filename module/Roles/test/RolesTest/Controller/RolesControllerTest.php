@@ -41,6 +41,9 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
         $this->controller->setServiceLocator($serviceManager);
+        $this->request->getHeaders()->addHeaders(array(
+          'x-stonemorapi' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'
+        ));
     }
  
     public function testCanAPIBeAccessed()
@@ -74,6 +77,11 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
        $result = $this->controller->dispatch($this->request);
        $response = $this->controller->getResponse();
        $this->assertEquals(501, $response->getStatusCode()); 
+    }
+
+    public function testGetAppTableReturnsInstanceOfAppTable()
+    {
+        $this->assertInstanceOf('Roles\Model\Apikeys\AppTable', $this->controller->getAppTable());
     }
 
     /* This should probably go into a Model test */

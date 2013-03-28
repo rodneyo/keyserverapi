@@ -1,6 +1,12 @@
 <?php
 namespace Roles;
 use Zend\Mvc\MvcEvent;
+use Roles\Model\ApiDbServiceFactory;
+use Roles\Model\Apikeys\App;
+use Roles\Model\Apikeys\AppTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
 
 class Module
 {
@@ -25,7 +31,34 @@ class Module
 
     public function getServiceConfig()
     {
-        return array ();
+      return array (
+        'factories' => array (
+          'apiDB' => new ApiDbServiceFactory('db1'),
+          'Roles\Model\Apikeys\AppTable' => function($sm) {
+              $tableGateway = $sm->get('AppTableGateway');
+              $table = new AppTable($tableGateway);
+              return $table;
+            },
+          'AppTableGateway' => function ($sm) {
+               $appDbAdapter = $sm->get('apiDB');
+               $resultSetPrototype = new ResultSet();
+               $resultSetPrototype->setArrayObjectPrototype( new App());
+               return new TableGateway('app', $appDbAdapter, null, $resultSetPrototype);
+              }, 
+          'Roles\Model\Apikeys\ClientTable' => function($sm) {
+              $tableGateway = $sm->get('ClientTableGateway');
+              $table = new AppTable($tableGateway);
+              return $table;
+            },
+          'ClientTableGateway' => function ($sm) {
+               $clientDbAdapter = $sm->get('apiDB');
+               $resultSetPrototype = new ResultSet();
+               $resultSetPrototype->setArrayObjectPrototype( new Client());
+               return new TableGateway('client', $clientDbAdapter, null, $resultSetPrototype);
+              }, 
+          'locDB' => new ApiDbServiceFactory('db2'),
+         )
+      );
     }
 
     public function onBootstrap(MvcEvent $event)

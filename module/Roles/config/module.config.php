@@ -16,9 +16,8 @@ return array(
             'dips' => array(
                 'type' => 'segment',
                 'options' => array(
-                  'route' => '/roles/:apikey/:uname/:appname',
+                  'route' => '/roles/:uname/:appname',
                   'constraints' => array(
-                    'apikey' => '[a-zA-Z0-9]+',
                     'uname' => '[a-zA-Z].+',
                     'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
                  ),
