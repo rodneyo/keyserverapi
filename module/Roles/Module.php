@@ -4,9 +4,10 @@ use Zend\Mvc\MvcEvent;
 use Roles\Model\ApiDbServiceFactory;
 use Roles\Model\Apikeys\App;
 use Roles\Model\Apikeys\AppTable;
+use Roles\Model\Apikeys\Client;
+use Roles\Model\Apikeys\ClientTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-
 
 class Module
 {
@@ -44,10 +45,10 @@ class Module
                $resultSetPrototype = new ResultSet();
                $resultSetPrototype->setArrayObjectPrototype( new App());
                return new TableGateway('app', $appDbAdapter, null, $resultSetPrototype);
-              }, 
+              },
           'Roles\Model\Apikeys\ClientTable' => function($sm) {
               $tableGateway = $sm->get('ClientTableGateway');
-              $table = new AppTable($tableGateway);
+              $table = new ClientTable($tableGateway);
               return $table;
             },
           'ClientTableGateway' => function ($sm) {
@@ -55,7 +56,7 @@ class Module
                $resultSetPrototype = new ResultSet();
                $resultSetPrototype->setArrayObjectPrototype( new Client());
                return new TableGateway('client', $clientDbAdapter, null, $resultSetPrototype);
-              }, 
+              },
           'locDB' => new ApiDbServiceFactory('db2'),
          )
       );

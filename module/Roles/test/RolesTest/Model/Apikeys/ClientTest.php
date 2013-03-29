@@ -1,26 +1,40 @@
 <?php
 namespace RolesTest\Model\Apikeys;
+
 use Roles\Model\Apikeys\Client;
+use Roles\Model\Apikeys\ClientTable;
+use Zend\Db\ResultSet\ResultSet;
 use PHPUnit_Framework_TestCase;
 
 class ClientTest extends PHPUnit_Framework_TestCase
 {
+    protected $client;
+    protected $selectWith;
+    protected $data = array('id' => 123,
+                          'apikey' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx',
+                          'client_name' => 'Client X',
+                          'issued_date' => '0000-00-00 00:00:00',
+                          'expiration_date' => '0000-00-00 00:00:00',
+                          'status' => 1,
+                          'description' => 'Acme API'
+                        );
+
     public function testClientInitialState()
     {
-        $app = new Client();
+        $client = new Client();
 
-        $this->assertNull($app->id, '"id", should initially be null');
-        $this->assertNull($app->apikey, '"apikey", should initially be null');
-        $this->assertNull($app->client_name, '"client_name", should initially be null');
-        $this->assertNull($app->issued_date, '"issued_date", should initially be null');
-        $this->assertNull($app->expiration_date, '"expiration_date", should initially be null');
-        $this->assertNull($app->status, '"status", should initially be null');
-        $this->assertNull($app->description, '"description", should initially be null');
+        $this->assertNull($client->id, '"id", should initially be null');
+        $this->assertNull($client->apikey, '"apikey", should initially be null');
+        $this->assertNull($client->client_name, '"client_name", should initially be null');
+        $this->assertNull($client->issued_date, '"issued_date", should initially be null');
+        $this->assertNull($client->expiration_date, '"expiration_date", should initially be null');
+        $this->assertNull($client->status, '"status", should initially be null');
+        $this->assertNull($client->description, '"description", should initially be null');
     }
 
     public function testExchangeArraySetsPropertiesCorrectly()
     {
-        $app = new Client();
+        $client = new Client();
         $data  = array('id' => 123,
                        'apikey'     => 'ALDAFKLA938A383NN392',
                        'client_name'  => 'Name of client app',
@@ -30,22 +44,22 @@ class ClientTest extends PHPUnit_Framework_TestCase
                        'description' => 'some kind of description'
                      );
 
-        $app->exchangeArray($data);
+        $client->exchangeArray($data);
 
-        $this->assertSame($data['id'], $app->id, '"id" was not set correctly');
-        $this->assertSame($data['apikey'], $app->apikey, '"apikey" was not set correctly');
-        $this->assertSame($data['client_name'], $app->client_name, '"client_name" was not set correctly');
-        $this->assertSame($data['issued_date'], $app->issued_date, '"issued_date" was not set correctly');
-        $this->assertSame($data['expiration_date'], $app->expiration_date, '"expiration_date" was not set correctly');
-        $this->assertSame($data['status'], $app->status, '"status" was not set correctly');
-        $this->assertSame($data['description'], $app->description, '"description" was not set correctly');
+        $this->assertSame($data['id'], $client->id, '"id" was not set correctly');
+        $this->assertSame($data['apikey'], $client->apikey, '"apikey" was not set correctly');
+        $this->assertSame($data['client_name'], $client->client_name, '"client_name" was not set correctly');
+        $this->assertSame($data['issued_date'], $client->issued_date, '"issued_date" was not set correctly');
+        $this->assertSame($data['expiration_date'], $client->expiration_date, '"expiration_date" was not set correctly');
+        $this->assertSame($data['status'], $client->status, '"status" was not set correctly');
+        $this->assertSame($data['description'], $client->description, '"description" was not set correctly');
     }
 
     public function testExchangeArraySetsPropertiesToNullIfKeysAreNotPresent()
     {
-        $app = new Client();
+        $client = new Client();
 
-        $app->exchangeArray(array('id' => 123,
+        $client->exchangeArray(array('id' => 123,
                        'apikey'     => 345,
                        'client_name'  => 'some client name',
                        'issued_date'  => '0000-00-00 00:00:00',
@@ -55,15 +69,62 @@ class ClientTest extends PHPUnit_Framework_TestCase
                      )
         );
 
-        $app->exchangeArray(array());
+        $client->exchangeArray(array());
 
-        $this->assertNull($app->id, '"id" should have defaulted to null');
-        $this->assertNull($app->apikey, '"apikey" should have defaulted to null');
-        $this->assertNull($app->client_name, '"client_name" should have defaulted to null');
-        $this->assertNull($app->issued_date, '"issued_date" should have defaulted to 0000-00-00 00:00:00');
-        $this->assertNull($app->expiration_date, '"expiration_date" should have defaulted to 0000-00-00 00:00:00');
-        $this->assertNull($app->status, '"status" should have defaulted to 0');
-        $this->assertNull($app->description, '"description" should have defaulted to null');
+        $this->assertNull($client->id, '"id" should have defaulted to null');
+        $this->assertNull($client->apikey, '"apikey" should have defaulted to null');
+        $this->assertNull($client->client_name, '"client_name" should have defaulted to null');
+        $this->assertNull($client->issued_date, '"issued_date" should have defaulted to 0000-00-00 00:00:00');
+        $this->assertNull($client->expiration_date, '"expiration_date" should have defaulted to 0000-00-00 00:00:00');
+        $this->assertNull($client->status, '"status" should have defaulted to 0');
+        $this->assertNull($client->description, '"description" should have defaulted to null');
+    }
+
+    public function testFetchAllReturnsAllClients()
+    {
+        $resultSet = new ResultSet();
+        $mockTableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway',
+                                   array('select'), array(), '', false);
+        $mockTableGateway->expects($this->once())
+                         ->method('select')
+                         ->with()
+                         ->will($this->returnValue($resultSet));
+
+        $clientTable = new ClientTable($mockTableGateway);
+
+        //test that both variables reference the same object.  A resultSet object in this case
+        $this->assertSame($resultSet, $clientTable->fetchAll());
+    }
+
+    public function testCanRetrieveClientByApiKey()
+    {
+        $this->client = new Client();
+        $this->client->exchangeArray($this->data);
+        $this->selectWith = array('apikey' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'); 
+
+        $clientTable = $this->setUpClient();
+        $this->assertSame($this->client, $clientTable->getClientByApiKey('N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'),
+                                  'Can not get client by their api key');
+    }
+
+    protected function setUpClient()
+    {
+        $resultSet = new ResultSet();
+        $resultSet->setArrayObjectPrototype(new Client());
+        $resultSet->initialize(array($this->client));
+
+        $mockTableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway',
+                                            array('select'),
+                                            array(),
+                                            '',
+                                            false);
+        $mockTableGateway->expects($this->once())
+                         ->method('select')
+                         ->with($this->selectWith)
+                         ->will($this->returnValue($resultSet));
+
+        $clientTable = new ClientTable($mockTableGateway);
+        return $clientTable;
     }
 
 }

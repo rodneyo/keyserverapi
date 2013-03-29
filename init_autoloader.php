@@ -38,9 +38,10 @@ if ($zf2Path) {
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
         Zend\Loader\AutoloaderFactory::factory(array(
             'Zend\Loader\StandardAutoloader' => array(
-                'autoregister_zf' => true
+              'autoregister_zf' => true,
             )
         ));
+        print(__DIR__); exit;
         require $zf2Path . '/Zend/Stdlib/compatibility/autoload.php';
         require $zf2Path . '/Zend/Session/compatibility/autoload.php';
     }

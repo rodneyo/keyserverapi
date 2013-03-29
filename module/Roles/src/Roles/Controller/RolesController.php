@@ -5,10 +5,12 @@ use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 use Roles\Model\Ldap;
 use Roles\Model\Apikeys\AppTable;
+use Roles\Model\Apikeys\ClientTable;
 
 class RolesController extends AbstractRestfulController
 {
     protected $appTable;
+    protected $clientTable;
     protected $allowedHttpMethods = array('GET');
     protected $errorResponseCode = 501;
     protected $jsonErrorResponse = array(
@@ -21,6 +23,7 @@ class RolesController extends AbstractRestfulController
       // register a custom handler for roles
       $rolesHandler = array($this, 'getRoles');
       $this->addHttpMethodHandler('get', $rolesHandler);
+      //$this->getClientTable();
 
     }
 
@@ -31,6 +34,14 @@ class RolesController extends AbstractRestfulController
           $this->appTable = $sm->get('Roles\Model\Apikeys\AppTable');
         }
         return $this->appTable;
+    }
+
+    public function getClientTable()
+    {
+        if (!$this->clientTable) {
+          $sm = $this->getServiceLocator();
+          $this->clientTable = $sm->get('Roles\Model\Apikeys\ClientTable');
+        }
     }
 
     /* public getRoles($mvcEvent)
@@ -44,22 +55,30 @@ class RolesController extends AbstractRestfulController
     public function getRoles($mvcEvent)
     {
         $roleParams = $this->getIdentifier($mvcEvent->getRouteMatch(), $mvcEvent->getRequest());
+        $this->getClientTable();
         /**
          * check api-key (apikey)
          * if valid query ad to get roles and locations
          *     uname, appname
          * Also check request timestamp against server to prevent replay
          */
-      $stoneMorHeader = $this->getRequest()->getHeader('x-stonemorapi')->getFieldValue();
+        $clientApiKey = $this->getRequest()->getHeader('x-stonemorapi')->getFieldValue();
+        try {
+            $this->clientTable->validateApiKey($clientApiKey);
 
-      $config = $this->getServiceLocator()->get('config');
-      $ldap = new Ldap($config);
+            $config = $this->getServiceLocator()->get('config');
+            $ldap = new Ldap($config);
 
-      $roles = $ldap->findRolesForUser($roleParams['uname'], $roleParams['appname']);
-      $locations = $ldap->findLocationsForUser($roleParams['uname']);
-      $data = array($roles, $locations);
+            $roles = $ldap->findRolesForUser($roleParams['uname'], $roleParams['appname']);
+            $locations = $ldap->findLocationsForUser($roleParams['uname']);
+            $data = array($roles, $locations);
+        }
+        catch (\Exception $e) {
+            // set 500 in the response
+            // create error json 
+        }
 
-      return $this->getJson($data);
+        return $this->getJson($data);
     }
 
     protected function getIdentifier($routeMatch, $request)
