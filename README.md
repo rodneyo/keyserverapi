@@ -3,7 +3,7 @@ StoneMor Security API
 
 Introduction
 ------------
-This RESTful API is accessible to authorized clients only and provides
+This a "kinda" RESTful API is accessible to authorized clients only and provides
 credential and role information. The API is built with Zend
 Framework 2.  
 
@@ -19,8 +19,8 @@ DIPS: (Deposit, Invoice, PCard, Scanning).
 
  - Client: MTS IntellaFlow
  - Calls
-    - dips/roles/[username]/[appname]
-    - dips/roles/[location]/[username]
+    - roles/[username]/[appname]
+    - roles/[location]/[username]
  - Returns
     - JSON object containing a list of roles from Active Directory
     - JSON object containing a list of approvers from MySQL database
