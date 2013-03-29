@@ -1,10 +1,9 @@
 <?php
 namespace Roles\Model\Apikeys;
 use Zend\Db\TableGateway\TableGateway;
-use StoneMor\CustomInterface\ValidateApiKeyInterface;
+use Roles\ValidateApiKeyInterface;
 
 class ClientTable implements ValidateApiKeyInterface
-//class ClientTable
 {
     protected $tableGateway;
 

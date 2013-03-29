@@ -1,5 +1,5 @@
 <?php
-namespace Roles\StoneMor\CustomInterface\ValidateApiKeyInterface;
+namespace Roles;
 
 interface ValidateApiKeyInterface
 {
