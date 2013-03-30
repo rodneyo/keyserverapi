@@ -11,12 +11,7 @@ class RolesController extends AbstractRestfulController
 {
     protected $appTable;
     protected $clientTable;
-    protected $allowedHttpMethods = array('GET');
-    protected $errorResponseCode = 501;
-    protected $jsonErrorResponse = array(
-                                    'exception' => 'API Error',
-                                    'message' => 'Method not implemented'
-                                );
+    protected $errorResponseMessage = 'Method Not Supported';
 
     public function __construct()
     {
@@ -74,7 +69,7 @@ class RolesController extends AbstractRestfulController
             $data = array($roles, $locations);
         }
         catch (\Exception $e) {
-            // set 500 in the response
+            print('Error occurred: ' . $e->getMessage());
             // create error json 
         }
 
@@ -96,42 +91,32 @@ class RolesController extends AbstractRestfulController
 
     public function edit($id)
     {
-       return $this->methodNotAllowed();
+       throw new \Exception ($this->errorResponseMessage);
+       //return $this->methodNotAllowed();
     }
 
     public function delete($id)
     {
-       return $this->methodNotAllowed();
+       throw new \Exception ($this->errorResponseMessage);
+       //return $this->methodNotAllowed();
     }
 
     public function create($id)
     {
-       return $this->methodNotAllowed();
+        throw new \Exception ($this->errorResponseMessage);
+       //return $this->methodNotAllowed();
     }
 
     public function update($id, $data)
     {
-       return $this->methodNotAllowed();
+       throw new \Exception ($this->errorResponseMessage);
+       //return $this->methodNotAllowed();
     }
 
     public function options()
     {
-       return $this->methodNotAllowed();
-    }
-
-    /* protected methodNotAllowed()
-    /**
-     * methodNotAllowed
-     * 
-     * @access protected
-     * @return void
-     */
-    protected function methodNotAllowed()
-    {
-        if (!in_array($this->getRequest()->getMethod(), $this->allowedHttpMethods)) {
-            $this->getResponse()->setStatusCode($this->errorResponseCode);
-            return $this->getJson($this->jsonErrorResponse);
-        }
+       throw new \Exception ($this->errorResponseMessage);
+       //return $this->methodNotAllowed();
     }
 
     /* protected getJson($data)

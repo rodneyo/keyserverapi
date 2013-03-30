@@ -6,6 +6,7 @@ use Zend\Authentication\Adapter\Ldap as AuthAdapter;
 use Zend\Ldap\Ldap as ZendLdap;
 use Zend\Ldap\Filter as LdapFilter;
 use Zend\Ldap\Converter\Converter as LdapConverter;
+use Zend\Ldap\Exception\LdapException as LdapException;
 
 /**
  * Ldap 
@@ -51,9 +52,10 @@ class Ldap
             $this->ldap->setOptions($server);
             $this->ldap->bind($this->getUserName(), $this->getUserPassword());
             $acctname = $this->ldap->getCanonicalAccountName($this->getUserName());
-          } catch (Zend\Ldap\Exception\LdapException $zle) {
-              //echo 'StoneMor LDAP Error:  ' . $zle->getMessage() . "\n"; exit;
-              if ($zle->getCode() === Zend\Ldap\Exception\LdapException::LDAP_X_DOMAIN_MISMATCH) {
+          } catch (LdapException $zle) {
+              echo 'StoneMor LDAP Error:  ' . $zle->getMessage() . "\n";
+              //@TODO Need to log these exceptions
+              if ($zle->getCode() === LdapException::LDAP_X_DOMAIN_MISMATCH) {
                  continue;
               }
               continue;

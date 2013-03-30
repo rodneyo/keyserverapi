@@ -25,7 +25,7 @@ class ClientTable implements ValidateApiKeyInterface
         $row = $rowset->current();
 
         if (!$row) {
-          throw new \Execption ('Client does not exist');
+          throw new \Exception ('Client does not exist');
         }
 
         return $row;
