@@ -53,6 +53,7 @@ class JsonExceptionStrategy extends ExceptionStrategy
             case Application::ERROR_CONTROLLER_NOT_FOUND:
             case Application::ERROR_CONTROLLER_INVALID:
             case Application::ERROR_ROUTER_NO_MATCH:
+                //$modelData['exception'] = 'API Error';
                 $modelData['exception'] = 'API Error';
                 $e->setResult(new JsonModel($modelData));
                 $e->setError(true);
@@ -63,14 +64,14 @@ class JsonExceptionStrategy extends ExceptionStrategy
                 $exception = $e->getParam('exception');
                 $modelData = array(
                     'message' => $exception->getMessage(),
-                    'type' => get_class($exception)
-                );
+                    'exception' => 'API Error'
+                  );
 
                 if ($this->displayExceptions()){
                     $modelData['exception'] = $exception;
                 }
                 $e->setResult(new JsonModel($modelData));
-                $e->setError(false);
+                $e->setError(true);
 
                 $response = $e->getResponse();
                 if (!$response) {

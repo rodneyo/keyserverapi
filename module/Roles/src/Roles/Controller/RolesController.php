@@ -6,11 +6,13 @@ use Zend\View\Model\JsonModel;
 use Roles\Model\Ldap;
 use Roles\Model\Apikeys\AppTable;
 use Roles\Model\Apikeys\ClientTable;
+use Roles\Model\Apikeys\ClientAppTable;
 
 class RolesController extends AbstractRestfulController
 {
     protected $appTable;
     protected $clientTable;
+    protected $clientAppTable;
     protected $errorResponseMessage = 'Method Not Supported';
 
     public function __construct()
@@ -18,7 +20,6 @@ class RolesController extends AbstractRestfulController
       // register a custom handler for roles
       $rolesHandler = array($this, 'getRoles');
       $this->addHttpMethodHandler('get', $rolesHandler);
-      //$this->getClientTable();
 
     }
 
@@ -39,6 +40,14 @@ class RolesController extends AbstractRestfulController
         }
     }
 
+    public function getClientAppTable()
+    {
+        if (!$this->clientAppTable) {
+          $sm = $this->getServiceLocator();
+          $this->clientAppTable = $sm->get('Roles\Model\Apikeys\ClientAppTable');
+        }
+    }
+
     /* public getRoles($mvcEvent)
     /**
      * getRoles
@@ -50,16 +59,17 @@ class RolesController extends AbstractRestfulController
     public function getRoles($mvcEvent)
     {
         $roleParams = $this->getIdentifier($mvcEvent->getRouteMatch(), $mvcEvent->getRequest());
-        $this->getClientTable();
-        /**
-         * check api-key (apikey)
-         * if valid query ad to get roles and locations
-         *     uname, appname
-         * Also check request timestamp against server to prevent replay
-         */
+        //@TODO Check header request time.  request time must be within 3 
+        //minute before or after window on keyserver time.
+        //
         $clientApiKey = $this->getRequest()->getHeader('x-stonemorapi')->getFieldValue();
         try {
-            $this->clientTable->validateApiKey($clientApiKey);
+            $this->getClientTable();
+
+            $clientId = $this->clientTable->hasValidApiKey($clientApiKey);
+
+            $this->getClientAppTable();
+            $this->clientAppTable->hasEnabledApp($clientId, $roleParams['appname']);
 
             $config = $this->getServiceLocator()->get('config');
             $ldap = new Ldap($config);
@@ -69,8 +79,7 @@ class RolesController extends AbstractRestfulController
             $data = array($roles, $locations);
         }
         catch (\Exception $e) {
-            print('Error occurred: ' . $e->getMessage());
-            // create error json 
+            throw new \Exception($e->getMessage());
         }
 
         return $this->getJson($data);
@@ -92,31 +101,26 @@ class RolesController extends AbstractRestfulController
     public function edit($id)
     {
        throw new \Exception ($this->errorResponseMessage);
-       //return $this->methodNotAllowed();
     }
 
     public function delete($id)
     {
        throw new \Exception ($this->errorResponseMessage);
-       //return $this->methodNotAllowed();
     }
 
     public function create($id)
     {
         throw new \Exception ($this->errorResponseMessage);
-       //return $this->methodNotAllowed();
     }
 
     public function update($id, $data)
     {
        throw new \Exception ($this->errorResponseMessage);
-       //return $this->methodNotAllowed();
     }
 
     public function options()
     {
        throw new \Exception ($this->errorResponseMessage);
-       //return $this->methodNotAllowed();
     }
 
     /* protected getJson($data)

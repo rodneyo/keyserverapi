@@ -48,35 +48,50 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
  
     public function testCanAPIBeAccessed()
     {
-      $this->request->setMethod('GET');
-      $result = $this->controller->dispatch($this->request);
-      $response = $this->controller->getResponse();
+        $this->request->setMethod('GET');
+        $result = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
 
-      $this->assertEquals(200, $response->getStatusCode()); 
+        $this->assertEquals(200, $response->getStatusCode()); 
     }
 
     public function testApiPostIsInvalid()
     {
-       $this->request->setMethod('POST');
-       $result = $this->controller->dispatch($this->request);
-       $response = $this->controller->getResponse();
-       $this->assertEquals(501, $response->getStatusCode()); 
+        try {
+            $this->request->setMethod('POST');
+            $result = $this->controller->dispatch($this->request);
+            $response = $this->controller->getResponse();
+        }
+        catch (\Exception $e) {
+           $this->assertEquals('Method Not Supported', $e->getMessage()); 
+           return;
+        }
+
+        $this->fail('Did not fail on POST to API');
     }
 
     public function testApiPutIsInvalid()
     {
-       $this->request->setMethod('PUT');
-       $result = $this->controller->dispatch($this->request);
-       $response = $this->controller->getResponse();
-       $this->assertEquals(501, $response->getStatusCode()); 
+        try {
+            $this->request->setMethod('PUT');
+            $result = $this->controller->dispatch($this->request);
+            $response = $this->controller->getResponse();
+        } 
+        catch (\Exception $e) {
+            $this->assertEquals('Method Not Supported', $e->getMessage()); 
+        }
     }
 
     public function testApiDeleteIsInvalid()
     {
-       $this->request->setMethod('DELETE');
-       $result = $this->controller->dispatch($this->request);
-       $response = $this->controller->getResponse();
-       $this->assertEquals(501, $response->getStatusCode()); 
+        try {
+            $this->request->setMethod('DELETE');
+            $result = $this->controller->dispatch($this->request);
+            $response = $this->controller->getResponse();
+        } 
+        catch (\Exception $e) {
+            $this->assertEquals('Method Not Supported', $e->getMessage());
+        }
     }
 
     public function testGetAppTableReturnsInstanceOfAppTable()
@@ -87,15 +102,15 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
     /* This should probably go into a Model test */
     public function testCanConnectToAd()
     {
-      $ldap = new Ldap($this->ldapOptions['ldap']['server1']);
-      $this->assertInstanceOf('Zend\Ldap\Ldap', $ldap, 'Not an instance of Zend Ldap');
+        $ldap = new Ldap($this->ldapOptions['ldap']['server1']);
+        $this->assertInstanceOf('Zend\Ldap\Ldap', $ldap, 'Not an instance of Zend Ldap');
 
-      $ldap->bind($this->ldapOptions['client']['username'],
-                  $this->ldapOptions['client']['password']
-                 );
-      $acctName = $ldap->getCanonicalAccountName($this->ldapOptions['client']['username']);
-      $expectedAcctName = 'STONEMOR\\' . $this->ldapOptions['client']['username'];
+        $ldap->bind($this->ldapOptions['client']['username'],
+                    $this->ldapOptions['client']['password']
+                   );
+        $acctName = $ldap->getCanonicalAccountName($this->ldapOptions['client']['username']);
+        $expectedAcctName = 'STONEMOR\\' . $this->ldapOptions['client']['username'];
 
-      $this->assertTrue($acctName === $expectedAcctName, 'Could not bind to AD');
+        $this->assertTrue($acctName === $expectedAcctName, 'Could not bind to AD');
     }
 }

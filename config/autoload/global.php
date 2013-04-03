@@ -14,10 +14,10 @@
 return array(
     'db1' => array(
       'driver'              => 'Pdo',
-      'dsn'                 => 'mysql:dbname:apikey;host=127.0.0.1',
+      'dsn'                 => 'mysql:dbname=apikey;host=127.0.0.1',
     ),
     'db2' => array(
       'driver'              => 'Pdo',
-      'dsn'                 => 'mysql:dbname:location;host=127.0.0.1',
+      'dsn'                 => 'mysql:dbname=location;host=127.0.0.1',
     ),
 );
