@@ -22,31 +22,6 @@ class ClientTable
         return $resultSet;
     }
 
-    /* public getClientByApiKey($apikey)
-    /**
-     * getClientByApiKey
-     * 
-     * @param mixed $apikey 
-     * @access public
-     * @return object
-     */
-    public function getClientByApiKey($apikey)
-    {
-         $apikey = (string) $apikey;
-         $sqlSelect = $this->tableGateway->getSql()->select();
-         $sqlSelect->where(array('apikey = ?' => $apikey))
-                   ->join('client_app', 'client_app.client_id = client.id', array('enabled'), 'left')
-                   ->join('app', 'app.id = client_app.app_id', array('name'), 'left');
-
-         $rowSet = $this->tableGateway->selectWith($sqlSelect);
-
-        if ($rowSet->count() <= 0) {
-          throw new \Exception ('Client does not exist');
-        }
-
-        return $rowSet;
-    }
-
     /* public hasValidApiKey($apikey)
     /**
      * hasValidApiKey

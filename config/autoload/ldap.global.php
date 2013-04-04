@@ -14,25 +14,7 @@
 return array(
   'ldap' => array(
     'server1' => array(
-      'host' => 'zeus.stonemor.com',
-      'useSsl' => true,
-      'port' => 636,
-      'accountDomainName' => 'stonemor.com',
-      'accountDomainNameShort' => 'STONEMOR',
-      'accountCanonicalForm' => 3,
-      'baseDn' => 'DC=stonemor,DC=com',
-    ),
-    'server2' => array(
-      'host' => 'hera.stonemor.com',
-      'useSsl' => true,
-      'port' => 636,
-      'accountDomainName' => 'stonemor.com',
-      'accountDomainNameShort' => 'STONEMOR',
-      'accountCanonicalForm' => 3,
-      'baseDn' => 'DC=stonemor,DC=com',
-    ),
-    'server3' => array(
-      'host' => 'odin.stonemor.com',
+      'host' => 'activedirectory.stonemor.com',
       'useSsl' => true,
       'port' => 636,
       'accountDomainName' => 'stonemor.com',

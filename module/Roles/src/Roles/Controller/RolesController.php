@@ -23,6 +23,13 @@ class RolesController extends AbstractRestfulController
 
     }
 
+    /* public getAppTable()
+    /**
+     * getAppTable
+     * 
+     * @access public
+     * @return object (instance of the AppTable class)
+     */
     public function getAppTable()
     {
         if (!$this->appTable) {
@@ -32,20 +39,38 @@ class RolesController extends AbstractRestfulController
         return $this->appTable;
     }
 
+    /* public getClientTable()
+    /**
+     * getClientTable
+     * 
+     * @access public
+     * @return object (instance of the ClientTable class)
+
+     */
     public function getClientTable()
     {
         if (!$this->clientTable) {
           $sm = $this->getServiceLocator();
           $this->clientTable = $sm->get('Roles\Model\Apikeys\ClientTable');
         }
+        return $this->clientTable;
     }
 
+    /* public getClientAppTable()
+    /**
+     * getClientAppTable
+     * 
+     * @access public
+     * @return  object (instance of the ClientAppTable class)
+
+     */
     public function getClientAppTable()
     {
         if (!$this->clientAppTable) {
           $sm = $this->getServiceLocator();
           $this->clientAppTable = $sm->get('Roles\Model\Apikeys\ClientAppTable');
         }
+        return $this->clientAppTable;
     }
 
     /* public getRoles($mvcEvent)

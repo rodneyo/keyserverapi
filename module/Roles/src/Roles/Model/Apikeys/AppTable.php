@@ -17,6 +17,7 @@ class AppTable
         return $resultSet;
     }
 
+    /*
     public function getAppByClientId($id)
     {
         $id = (int) $id;
@@ -30,6 +31,6 @@ class AppTable
         }
 
         return $row;
-    }
+    }*/
 }
 

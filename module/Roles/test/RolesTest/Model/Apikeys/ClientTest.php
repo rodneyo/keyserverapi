@@ -15,7 +15,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
                           'client_name' => 'Client X',
                           'issued_date' => '0000-00-00 00:00:00',
                           'expiration_date' => '0000-00-00 00:00:00',
-                          'status' => 1,
+                          'enabled' => 1,
                           'description' => 'Acme API'
                         );
 
@@ -28,7 +28,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertNull($client->client_name, '"client_name", should initially be null');
         $this->assertNull($client->issued_date, '"issued_date", should initially be null');
         $this->assertNull($client->expiration_date, '"expiration_date", should initially be null');
-        $this->assertNull($client->status, '"status", should initially be null');
+        $this->assertNull($client->enabled, '"enabled", should initially be null');
         $this->assertNull($client->description, '"description", should initially be null');
     }
 
@@ -40,7 +40,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
                        'client_name'  => 'Name of client app',
                        'issued_date'  => '0000-00-00 00:00:00',
                        'expiration_date'  => '0000-00-00 00:00:00',
-                       'status' => 0,
+                       'enabled' => 0,
                        'description' => 'some kind of description'
                      );
 
@@ -51,7 +51,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertSame($data['client_name'], $client->client_name, '"client_name" was not set correctly');
         $this->assertSame($data['issued_date'], $client->issued_date, '"issued_date" was not set correctly');
         $this->assertSame($data['expiration_date'], $client->expiration_date, '"expiration_date" was not set correctly');
-        $this->assertSame($data['status'], $client->status, '"status" was not set correctly');
+        $this->assertSame($data['enabled'], $client->enabled, '"enabled" was not set correctly');
         $this->assertSame($data['description'], $client->description, '"description" was not set correctly');
     }
 
@@ -64,7 +64,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
                        'client_name'  => 'some client name',
                        'issued_date'  => '0000-00-00 00:00:00',
                        'expiration_date'  => '0000-00-00 00:00:00',
-                       'status'           => 0,
+                       'enabled'           => 0,
                        'description'  => 'some description'
                      )
         );
@@ -76,7 +76,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->assertNull($client->client_name, '"client_name" should have defaulted to null');
         $this->assertNull($client->issued_date, '"issued_date" should have defaulted to 0000-00-00 00:00:00');
         $this->assertNull($client->expiration_date, '"expiration_date" should have defaulted to 0000-00-00 00:00:00');
-        $this->assertNull($client->status, '"status" should have defaulted to 0');
+        $this->assertNull($client->enabled, '"enabled" should have defaulted to 0');
         $this->assertNull($client->description, '"description" should have defaulted to null');
     }
 
@@ -94,17 +94,6 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         //test that both variables reference the same object.  A resultSet object in this case
         $this->assertSame($resultSet, $clientTable->fetchAll());
-    }
-
-    public function testCanRetrieveClientByApiKey()
-    {
-        $this->client = new Client();
-        $this->client->exchangeArray($this->data);
-        $this->selectWith = array('apikey' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'); 
-
-        $clientTable = $this->setUpClient();
-        $this->assertSame($this->client, $clientTable->getClientByApiKey('N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'),
-                                  'Can not get client by their api key');
     }
 
     protected function setUpClient()

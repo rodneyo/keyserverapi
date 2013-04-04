@@ -28,9 +28,11 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array(
           'controller' => 'roles',
-          'apikey' => '', 
-          'uname' => '', 
-          'appname' => ''
+          'uname' => 'jprou', 
+          'appname' => 'dips'
+        ));
+        $this->request->getHeaders()->addHeaders(array(
+          'x-stonemorapi' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'
         ));
         $this->event      = new MvcEvent();
         $config = $serviceManager->get('Config');
@@ -41,9 +43,6 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
         $this->controller->setServiceLocator($serviceManager);
-        $this->request->getHeaders()->addHeaders(array(
-          'x-stonemorapi' => 'N2MzNjc3MjNjZDA4MjUyYzJhNjFjZGEx'
-        ));
     }
  
     public function testCanAPIBeAccessed()
@@ -53,6 +52,28 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode()); 
+    }
+
+    public function testGetRolesReturnValidJSONModel()
+    {
+        $this->request->setMethod('GET');
+        $result = $this->controller->dispatch($this->request);
+        $this->assertInstanceOf('Zend\View\Model\JsonModel', $result);
+    }
+
+    public function testGetRolesReturnJSONExceptionOnError()
+    {
+        $this->routeMatch->setParam('appname', 'xxx');
+
+        try {
+          $this->request->setMethod('GET');
+          $result = $this->controller->dispatch($this->request);
+        }
+        catch (\Exception $expected) {
+          return;
+        }
+        $this->fail('Invalid Parameter Exception was not thrown');
+
     }
 
     public function testApiPostIsInvalid()
@@ -79,7 +100,9 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         } 
         catch (\Exception $e) {
             $this->assertEquals('Method Not Supported', $e->getMessage()); 
+            return;
         }
+        $this->fail('Did not fail on PUT to API');
     }
 
     public function testApiDeleteIsInvalid()
@@ -91,13 +114,32 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         } 
         catch (\Exception $e) {
             $this->assertEquals('Method Not Supported', $e->getMessage());
+            return;
         }
+        $this->fail('Did not fail on DELETE to API');
     }
 
     public function testGetAppTableReturnsInstanceOfAppTable()
     {
         $this->assertInstanceOf('Roles\Model\Apikeys\AppTable', $this->controller->getAppTable());
     }
+
+    public function testGetClientTableReturnsInstanceOfClientTable()
+    {
+      $this->assertInstanceOf(
+                'Roles\Model\Apikeys\ClientTable', 
+                $this->controller->getClientTable()
+              );
+    }
+
+    public function testGetClientAppTableReturnsInstanceOfClientAppTable()
+    {
+      $this->assertInstanceOf(
+                'Roles\Model\ApiKeys\ClientAppTable',
+                $this->controller->getClientAppTable()
+              );
+    }
+
 
     /* This should probably go into a Model test */
     public function testCanConnectToAd()
@@ -107,7 +149,7 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
 
         $ldap->bind($this->ldapOptions['client']['username'],
                     $this->ldapOptions['client']['password']
-                   );
+                  );
         $acctName = $ldap->getCanonicalAccountName($this->ldapOptions['client']['username']);
         $expectedAcctName = 'STONEMOR\\' . $this->ldapOptions['client']['username'];
 

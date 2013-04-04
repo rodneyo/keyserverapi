@@ -44,9 +44,6 @@ class Module
             },
           'AppTableGateway' => function ($sm) {
                $appDbAdapter = $sm->get('apiDB');
-               //$resultSetPrototype = new ResultSet();
-               //$resultSetPrototype->setArrayObjectPrototype( new App());
-               //return new TableGateway('app', $appDbAdapter, null, $resultSetPrototype);
                return new TableGateway('app', $appDbAdapter, null);
             },
           'Roles\Model\Apikeys\ClientTable' => function($sm) {
@@ -56,9 +53,6 @@ class Module
             },
           'ClientTableGateway' => function ($sm) {
                $clientDbAdapter = $sm->get('apiDB');
-               //$resultSetPrototype = new ResultSet();
-               //$resultSetPrototype->setArrayObjectPrototype( new Client());
-               //return new TableGateway('client', $clientDbAdapter, null, $resultSetPrototype);
                return new TableGateway('client', $clientDbAdapter, null);
             },
           'Roles\Model\Apikeys\ClientAppTable' => function($sm) {
@@ -68,9 +62,6 @@ class Module
             },
           'ClientAppTableGateway' => function ($sm) {
                $clientAppDbAdapter = $sm->get('apiDB');
-               //$resultSetPrototype = new ResultSet();
-               //$resultSetPrototype->setArrayObjectPrototype( new ClientApp());
-               //return new TableGateway('client_app', $clientAppDbAdapter, null, $resultSetPrototype);
                return new TableGateway('client_app', $clientAppDbAdapter, null);
             },
           'locDB' => new ApiDbServiceFactory('db2'),
