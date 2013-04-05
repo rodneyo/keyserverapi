@@ -30,9 +30,14 @@ class ClientTable
      * @access public
      * @return int
      */
-    public function hasValidApiKey($apikey)
+    public function hasValidApiKey($apiRequestHeader)
     {
-        $apikey = (string) $apikey;
+        if (!$apiRequestHeader->getHeader('x-stonemorapi')) {
+            throw new \Exception ('Missing api key in request header');
+        } else {
+            $apikey = (string) $apiRequestHeader->getHeader('x-stonemorapi')->getFieldValue();
+        }
+
         $currDateTime = new \Zend\Db\Sql\Expression("NOW()");
         $sqlSelect = $this->tableGateway->getSql()->select();
         $sqlSelect->where(array('apikey = ?' => $apikey))
@@ -42,9 +47,7 @@ class ClientTable
         $rowSet = $this->tableGateway->selectWith($sqlSelect);
 
         if ($rowSet->count() <= 0) {
-            throw new \Exception ('api key expired or does not exist:' .
-              $apikey . ':' .__FILE__
-            );
+            throw new \Exception ('api key expired or does not exist:' . $apikey);
         }
         return $rowSet->current()->id; 
 

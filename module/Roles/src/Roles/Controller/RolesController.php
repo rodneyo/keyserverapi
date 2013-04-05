@@ -15,17 +15,89 @@ class RolesController extends AbstractRestfulController
     protected $clientAppTable;
     protected $errorResponseMessage = 'Method Not Supported';
 
-    public function __construct()
+    /* public get($data)
+    /**
+     * get
+     * 
+     * @param mixed $data 
+     * @access public
+     * @return JSON
+     */
+    public function get($data)
     {
-      // register a custom handler for roles
-      $rolesHandler = array($this, 'getRoles');
-      $this->addHttpMethodHandler('get', $rolesHandler);
+        try {
+            $this->getClientTable();
 
+            $clientId = $this->clientTable->hasValidApiKey($this->getRequest());
+
+            $this->getClientAppTable();
+            $this->clientAppTable->hasEnabledApp($clientId, $data['appname']);
+
+            $config = $this->getServiceLocator()->get('config');
+            $ldap = new Ldap($config);
+
+            $roles = $ldap->findRolesForUser($data['uname'], $data['appname']);
+            $locations = $ldap->findLocationsForUser($data['uname']);
+            $data = array($roles, $locations);
+        }
+        catch (\Exception $e) {
+          $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
+            . print_r($data,true);
+            $this->getServiceLocator()->get('Zend\Log')->crit($logData); 
+            throw new \Exception($e->getMessage());
+        }
+
+        return $this->getJson($data);
+    }
+
+    /*
+     * edit, delete, create, update and options methods must be implemented
+     * due to the inheritance from AbstractRestfulController
+     */
+    public function edit($id)
+    {
+       throw new \Exception ($this->errorResponseMessage);
+    }
+
+    public function delete($id)
+    {
+       throw new \Exception ($this->errorResponseMessage);
+    }
+
+    public function create($id)
+    {
+        throw new \Exception ($this->errorResponseMessage);
+    }
+
+    public function update($id, $data)
+    {
+       throw new \Exception ($this->errorResponseMessage);
+    }
+
+    public function options()
+    {
+       throw new \Exception ($this->errorResponseMessage);
+    }
+    public function getList()
+    {
+    }
+
+    /* protected getJson($data)
+     * getJson
+     * 
+     * @param mixed $data 
+     * @access protected
+     * @return zend JsonModel
+     */
+    protected function getJson($data)
+    {
+      return new JsonModel($data);
     }
 
     /* public getAppTable()
     /**
      * getAppTable
+     * Pull object from the service manager
      * 
      * @access public
      * @return object (instance of the AppTable class)
@@ -73,91 +145,9 @@ class RolesController extends AbstractRestfulController
         return $this->clientAppTable;
     }
 
-    /* public getRoles($mvcEvent)
-    /**
-     * getRoles
-     * 
-     * @param  object $mvcEvent 
-     * @access public
-     * @return json
-     */
-    public function getRoles($mvcEvent)
-    {
-        $roleParams = $this->getIdentifier($mvcEvent->getRouteMatch(), $mvcEvent->getRequest());
-        //@TODO Check header request time.  request time must be within 3 
-        //minute before or after window on keyserver time.
-        //
-        $clientApiKey = $this->getRequest()->getHeader('x-stonemorapi')->getFieldValue();
-        try {
-            $this->getClientTable();
-
-            $clientId = $this->clientTable->hasValidApiKey($clientApiKey);
-
-            $this->getClientAppTable();
-            $this->clientAppTable->hasEnabledApp($clientId, $roleParams['appname']);
-
-            $config = $this->getServiceLocator()->get('config');
-            $ldap = new Ldap($config);
-
-            $roles = $ldap->findRolesForUser($roleParams['uname'], $roleParams['appname']);
-            $locations = $ldap->findLocationsForUser($roleParams['uname']);
-            $data = array($roles, $locations);
-        }
-        catch (\Exception $e) {
-            $this->getServiceLocator()->get('Zend\Log')->crit($e->getMessage()); 
-            throw new \Exception($e->getMessage());
-        }
-
-        return $this->getJson($data);
-    }
-
     protected function getIdentifier($routeMatch, $request)
     {
        return $routeMatch->getParams();
     }
 
-    public function getList()
-    {
-    }
-
-    public function get($data)
-    {
-    }
-
-    public function edit($id)
-    {
-       throw new \Exception ($this->errorResponseMessage);
-    }
-
-    public function delete($id)
-    {
-       throw new \Exception ($this->errorResponseMessage);
-    }
-
-    public function create($id)
-    {
-        throw new \Exception ($this->errorResponseMessage);
-    }
-
-    public function update($id, $data)
-    {
-       throw new \Exception ($this->errorResponseMessage);
-    }
-
-    public function options()
-    {
-       throw new \Exception ($this->errorResponseMessage);
-    }
-
-    /* protected getJson($data)
-     * getJson
-     * 
-     * @param mixed $data 
-     * @access protected
-     * @return zend JsonModel
-     */
-    protected function getJson($data)
-    {
-      return new JsonModel($data);
-    }
 }

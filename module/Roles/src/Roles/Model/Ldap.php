@@ -14,7 +14,6 @@ use Zend\Ldap\Exception\LdapException as LdapException;
  * @package Webdav
  * @version //autogen//
  * @author  StoneMor Partners 
- * @todo create a JSON error handler to override the existing html one
  */
 class Ldap
 {
@@ -111,7 +110,7 @@ class Ldap
                         )); 
       return $locations;
     }
-    
+
     public function setLdapOptions(array $config)
     {
         $this->ldapOptions = $config['ldap'];
