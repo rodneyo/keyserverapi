@@ -77,7 +77,10 @@ class ClientAppTable
         $rowSet = $this->tableGateway->selectWith($sqlSelect);
 
         if ($rowSet->count() <= 0) {
-            throw new \Exception ('App is disabled or does not exist for the calling client');
+          throw new \Exception ('application is disabled for client or does not exist' . 
+            ':' . $appName . ':' . $clientId . ':' . __FILE__
+          );
+
         }
 
     }

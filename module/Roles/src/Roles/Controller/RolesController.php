@@ -104,6 +104,7 @@ class RolesController extends AbstractRestfulController
             $data = array($roles, $locations);
         }
         catch (\Exception $e) {
+            $this->getServiceLocator()->get('Zend\Log')->crit($e->getMessage()); 
             throw new \Exception($e->getMessage());
         }
 

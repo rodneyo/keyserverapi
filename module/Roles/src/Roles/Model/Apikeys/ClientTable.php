@@ -42,7 +42,9 @@ class ClientTable
         $rowSet = $this->tableGateway->selectWith($sqlSelect);
 
         if ($rowSet->count() <= 0) {
-            throw new \Exception ('Client does not exist or has expired');
+            throw new \Exception ('api key expired or does not exist:' .
+              $apikey . ':' .__FILE__
+            );
         }
         return $rowSet->current()->id; 
 

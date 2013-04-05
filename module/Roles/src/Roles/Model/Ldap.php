@@ -48,18 +48,14 @@ class Ldap
     protected function bindToServer(array $options)
     {
         foreach ($options as $option => $server) {
-          try {
-            $this->ldap->setOptions($server);
-            $this->ldap->bind($this->getUserName(), $this->getUserPassword());
-            $acctname = $this->ldap->getCanonicalAccountName($this->getUserName());
-          } catch (LdapException $zle) {
-              echo 'StoneMor LDAP Error:  ' . $zle->getMessage() . "\n";
-              //@TODO Need to log these exceptions
-              if ($zle->getCode() === LdapException::LDAP_X_DOMAIN_MISMATCH) {
-                 continue;
-              }
-              continue;
-          }
+            try {
+                $this->ldap->setOptions($server);
+                $this->ldap->bind($this->getUserName(), $this->getUserPassword());
+                $acctname = $this->ldap->getCanonicalAccountName($this->getUserName());
+            } 
+            catch (LdapException $zle) {
+                throw new \Exception\LdapException($zle);
+            }
         }
     }
 

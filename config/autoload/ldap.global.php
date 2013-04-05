@@ -14,7 +14,8 @@
 return array(
   'ldap' => array(
     'server1' => array(
-      'host' => 'activedirectory.stonemor.com',
+      //'host' => 'activedirectory.stonemor.com',
+      'host' => 'zeus.stonemor.com',
       'useSsl' => true,
       'port' => 636,
       'accountDomainName' => 'stonemor.com',

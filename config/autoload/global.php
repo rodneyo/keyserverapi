@@ -20,4 +20,15 @@ return array(
       'driver'              => 'Pdo',
       'dsn'                 => 'mysql:dbname=location;host=127.0.0.1',
     ),
+    //You should override this in your local.php to specify a log location on your dev machine
+    'service_manager' => array(
+          'factories' => array(
+            'Zend\Log' => function($sm) {
+                $log = new Zend\Log\Logger();
+                $writer = new Zend\Log\Writer\Stream('/var/log/stonemor/app_logs/security_api.log');
+                $log->addWriter($writer);
+                return $log;
+              }
+          )
+     )
 );
