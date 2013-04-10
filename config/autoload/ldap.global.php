@@ -14,14 +14,15 @@
 return array(
   'ldap' => array(
     'server1' => array(
-      //'host' => 'activedirectory.stonemor.com',
-      'host' => 'zeus.stonemor.com',
+      'host' => 'activedirectory.stonemor.com',
       'useSsl' => true,
       'port' => 636,
       'accountDomainName' => 'stonemor.com',
       'accountDomainNameShort' => 'STONEMOR',
       'accountCanonicalForm' => 3,
       'baseDn' => 'DC=stonemor,DC=com',
+      'networkTimeout' => 5
     ),
-  )
+  ),
+  'ldaptries' => 6
 );

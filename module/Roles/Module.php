@@ -2,14 +2,12 @@
 namespace Roles;
 use Zend\Mvc\MvcEvent;
 use Roles\Model\ApiDbServiceFactory;
-//use Roles\Model\Apikeys\App;
 use Roles\Model\Apikeys\AppTable;
-//use Roles\Model\Apikeys\Client;
 use Roles\Model\Apikeys\ClientTable;
-//use Roles\Model\Apikeys\ClientApp;
 use Roles\Model\Apikeys\ClientAppTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use Roles\Model\Ldap;
 
 class Module
 {
@@ -63,6 +61,12 @@ class Module
           'ClientAppTableGateway' => function ($sm) {
                $clientAppDbAdapter = $sm->get('apiDB');
                return new TableGateway('client_app', $clientAppDbAdapter, null);
+            },
+          'Roles\Model\Ldap' => function ($sm) {
+              $ldapOptions = $sm->get('config');
+              $appLogger = $sm->get('Zend\Log');
+              $ldap = new Ldap($ldapOptions, $appLogger);
+              return $ldap;
             },
           'locDB' => new ApiDbServiceFactory('db2'),
          )

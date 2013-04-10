@@ -11,49 +11,59 @@ use Zend\Ldap\Exception\LdapException as LdapException;
 /**
  * Ldap 
  * 
- * @package Webdav
- * @version //autogen//
  * @author  StoneMor Partners 
  */
 class Ldap
 {
     protected $ldap;
     protected $ldapOptions;
+    protected $appLogger;
     protected $userName;
     protected $userPassword;
     protected $auth;
     protected $adapter;
     protected $roles = array();
 
-    public function __construct(array $config)
+    public function __construct(array $config, $appLogger)
     {
         $this->ldap = new ZendLdap();
 
         $this->setLdapOptions($config);
+        $this->setApplicationLogger($appLogger);
+        $this->setLdapTries($config);
         $this->setUserName($config);
         $this->setUserPassword($config);
-        $this->bindToServer($this->ldapOptions);
+        $this->bindToServer();
     }
 
     /* protected bindToServer(array $options) {{{ */ 
     /**
      * bindToServer
      * 
-     * @param array $options 
+     * @param null
      * @access protected
      * @return void
      * @TODO create a JSON error handler to override the default.
      */
-    protected function bindToServer(array $options)
+    protected function bindToServer()
     {
-        foreach ($options as $option => $server) {
-            try {
-                $this->ldap->setOptions($server);
-                $this->ldap->bind($this->getUserName(), $this->getUserPassword());
-                $acctname = $this->ldap->getCanonicalAccountName($this->getUserName());
-            } 
-            catch (LdapException $zle) {
-                throw new \Exception\LdapException($zle);
+        $tries = 0;
+        for ($tries = 0; $tries < $this->ldapTries; $tries++) {
+            foreach ($this->ldapOptions as $option => $server) {
+                try {
+                    $this->ldap->setOptions($server);
+                    $this->ldap->bind($this->userName, $this->userPassword);
+                    $acctname = $this->ldap->getCanonicalAccountName($this->userName);
+                    $tries = 999;
+                    break; //the bind was successful, break out of all loops
+                } 
+                catch (LdapException $zle) {
+                    if ($tries > $this->ldapTries) {
+                        throw new Exception('Connect to ldap tries exceeded', $zle);
+                    } 
+                    $this->appLogger->crit($zle->getMessage());
+                    continue;
+                }
             }
         }
     }
@@ -111,14 +121,30 @@ class Ldap
       return $locations;
     }
 
+    /* public setLdapOptions(array $config)
+    /**
+     * setLdapOptions
+     * 
+     * @param array $config 
+     * @access public
+     * @return void
+     */
     public function setLdapOptions(array $config)
     {
         $this->ldapOptions = $config['ldap'];
     }
 
-    public function getLdapOptions()
+    /* public setApplicationLogger($appLogger)
+    /**
+     * setApplicationLogger
+     * 
+     * @param object $appLogger 
+     * @access public
+     * @return void
+     */
+    public function setApplicationLogger($appLogger)
     {
-        return $this->ldapOptions;
+        $this->appLogger = $appLogger;
     }
 
     /* public setUserName(array $config)
@@ -134,18 +160,6 @@ class Ldap
         $this->userName = $config['client']['username'];
     }
 
-    /* public getUserName()
-    /**
-     * getUserName
-     * 
-     * @access public
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
     /* public setUserPassword($config)
     /**
      * setUserPassword
@@ -159,15 +173,16 @@ class Ldap
         $this->userPassword = $config['client']['password'];
     }
 
-    /* public getUserPassword()
+    /* public setLdapTries($config) {{{ */ 
     /**
-     * getUserPassword
+     * setLdapTries
      * 
+     * @param array $config 
      * @access public
-     * @return string
+     * @return void
      */
-    public function getUserPassword()
+    public function setLdapTries($config)
     {
-      return $this->userPassword;
+        $this->ldapTries = $config['ldaptries'];
     }
 }

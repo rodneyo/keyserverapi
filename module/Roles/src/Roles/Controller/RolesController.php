@@ -3,7 +3,6 @@ namespace Roles\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
-use Roles\Model\Ldap;
 use Roles\Model\Apikeys\AppTable;
 use Roles\Model\Apikeys\ClientTable;
 use Roles\Model\Apikeys\ClientAppTable;
@@ -34,7 +33,8 @@ class RolesController extends AbstractRestfulController
             $this->clientAppTable->hasEnabledApp($clientId, $data['appname']);
 
             $config = $this->getServiceLocator()->get('config');
-            $ldap = new Ldap($config);
+
+            $ldap = $this->getLdap(); //from the service manager, reduces resource coupling
 
             $roles = $ldap->findRolesForUser($data['uname'], $data['appname']);
             $locations = $ldap->findLocationsForUser($data['uname']);
@@ -148,6 +148,11 @@ class RolesController extends AbstractRestfulController
     protected function getIdentifier($routeMatch, $request)
     {
        return $routeMatch->getParams();
+    }
+
+    protected function getLdap()
+    {
+        return $this->getServiceLocator()->get('Roles\Model\Ldap');
     }
 
 }
