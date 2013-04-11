@@ -7,7 +7,7 @@
  <project name="security" default="build" basedir=".">
  <property name="basedir" value="${project.basedir}" />
  <property name="source" value="${basedir}/module/Roles"/>
- <property name="tests" value="${basedir}/modules/Roles/test"/>
+ <property name="tests" value="${basedir}/module/Roles/test"/>
 
  <target name="clean" description="Clean up and create artifact directories">
   <delete dir="${basedir}/build/api"/>
