@@ -8,7 +8,7 @@
     </testsuites>
     <filter>
       <whitelist>
-        <directory suffix=".php">/home/roliv/Sites/securityapi/module/Roles/src</directory>
+        <directory suffix=".php">../src</directory>
       </whitelist>
     </filter>
     <logging>
