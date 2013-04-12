@@ -60,7 +60,7 @@
 
  <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
   <exec logoutput="true"
-        command="phpcs --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=PEAR ${source}" />
+        command="phpcs --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=Zend ${source}" />
  </target>
 
  <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
