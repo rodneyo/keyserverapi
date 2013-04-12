@@ -45,15 +45,6 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->setServiceLocator($serviceManager);
     }
  
-    public function testCanAPIBeAccessed()
-    {
-        $this->request->setMethod('GET');
-        $result = $this->controller->dispatch($this->request);
-        $response = $this->controller->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode()); 
-    }
-
     public function testGetRolesReturnValidJSONModel()
     {
         $this->request->setMethod('GET');
