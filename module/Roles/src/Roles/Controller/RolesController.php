@@ -89,7 +89,7 @@ class RolesController extends AbstractRestfulController
      * @access protected
      * @return zend JsonModel
      */
-    protected function getJson($data)
+    protected function getJson(array $data)
     {
       return new JsonModel($data);
     }

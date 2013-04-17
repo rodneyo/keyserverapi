@@ -36,6 +36,7 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         ));
         $this->event      = new MvcEvent();
         $config = $serviceManager->get('Config');
+
         $routerConfig = isset($config['router']) ? $config['router'] : array();
         $router = HttpRouter::factory($routerConfig);
         $this->ldapOptions = $config;
