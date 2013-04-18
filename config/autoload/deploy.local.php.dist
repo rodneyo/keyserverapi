@@ -28,7 +28,7 @@ return array(
           'factories' => array(
             'Zend\Log' => function($sm) {
                 $log = new Zend\Log\Logger();
-                $writer = new Zend\Log\Writer\LOG_WRITER_LOCAITON;
+                $writer = new Zend\Log\Writer\LOG_WRITER_LOCATION;
                 $log->addWriter($writer);
                 return $log;
               }
