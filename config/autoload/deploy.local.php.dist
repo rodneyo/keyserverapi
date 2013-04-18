@@ -21,7 +21,7 @@ return array(
         'password' => 'DB2_PASSWD'
       ),
     'client' => array(
-        'username' => 'AD_USER'
+        'username' => 'AD_USER',
         'password' => 'AD_PASSWD'
      ),
     'service_manager' => array(
