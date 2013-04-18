@@ -8,6 +8,7 @@
  <property name="basedir" value="${project.basedir}" />
  <property name="source" value="${basedir}/module/Roles/src"/>
  <property name="tests" value="${basedir}/module/Roles/test"/>
+ <property name="config" value="${basedir}/config/autoload"/>
 
  <target name="clean" description="Clean up and create artifact directories">
   <delete dir="${basedir}/build/api"/>
@@ -23,12 +24,18 @@
   <mkdir dir="${basedir}/build/pdepend"/>
  </target>
 
+ <target name="configure" description="Write local configuration params for environment">
+   <exec logoutput="true" command="sed -i 's/AD_USER/jprou/g' ${config}/deploy.local.php.dist"/>
+   <exec logoutput="true" command="sed -i 's/AD_PASSWD/052013/g' ${config}/deploy.local.php.dist"/>
+ </target>
+
  <target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
    <exec logoutput="true"
      command="phpunit --configuration=${tests}/phpunit.xml" />
  </target>
 
  <target name="parallelTasks" description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc and phploc tasks in parallel using a maximum of 2 threads.">
+   <phingcall target="configure"/>
    <phingcall target="pdepend"/>
    <phingcall target="phpmd"/>
    <phingcall target="phpcpd"/>
