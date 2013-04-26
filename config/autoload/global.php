@@ -18,6 +18,10 @@ return array(
     ),
     'db2' => array(
       'driver'              => 'Pdo',
-      'dsn'                 => 'mysql:dbname=location;host=127.0.0.1',
+      'dsn'                 => 'mysql:dbname=rollup;host=127.0.0.1',
     ),
+    'appErrorMessages' => array(
+       'getLocationsByUser'  => 'Problem encountered retrieving locations',
+       'getApproversAndPcardUsers'  => 'Problem retrieving field approvers and p-card users',
+     ),
 );

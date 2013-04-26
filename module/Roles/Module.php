@@ -8,6 +8,7 @@ use Roles\Model\Apikeys\ClientAppTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Roles\Model\Ldap;
+use Roles\Model\RollUp\RollUpStoredProcedure;
 
 class Module
 {
@@ -35,6 +36,18 @@ class Module
       return array (
         'factories' => array (
           'apiDB' => new ApiDbServiceFactory('db1'),
+          'rollUpDB' => new ApiDbServiceFactory('db2'),
+
+          'RollUpStoredProcedure' => function($sm) {
+              $rollUpDbAdapter = $sm->get('rollUpDB');
+              $appLogger       = $sm->get('Zend\Log');
+              $config          = $sm->get('config');
+              $appErrorMessages= $config['appErrorMessages'];
+              $rollUpStoredProcedure = new RollUpStoredProcedure(
+                $rollUpDbAdapter, $appLogger, $appErrorMessages
+              );
+              return $rollUpStoredProcedure;
+            },
           'Roles\Model\Apikeys\AppTable' => function($sm) {
               $tableGateway = $sm->get('AppTableGateway');
               $table = new AppTable($tableGateway);
@@ -68,7 +81,6 @@ class Module
               $ldap = new Ldap($ldapOptions, $appLogger);
               return $ldap;
             },
-          'locDB' => new ApiDbServiceFactory('db2'),
          )
       );
     }
