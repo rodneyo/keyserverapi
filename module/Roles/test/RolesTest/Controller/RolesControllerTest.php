@@ -132,8 +132,6 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
               );
     }
 
-
-    /* This should probably go into a Model test */
     public function testCanConnectToAd()
     {
         $ldap = new Ldap($this->ldapOptions['ldap']['server1']);

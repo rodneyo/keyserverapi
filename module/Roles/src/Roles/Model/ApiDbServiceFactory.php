@@ -16,7 +16,6 @@ use Zend\Db\Adapter\Adapter;
  * ApiDbServiceFactory 
  * Custom factory to create adapters for 1 or more databases 
  * @uses FactoryInterface
- * @package Webdav
  * @copyright Copyright (c) 2013 All rights reserved.
  * @author  StoneMor Partners
  */

@@ -3,15 +3,13 @@ namespace Roles\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
-use Roles\Model\Apikeys\AppTable;
-use Roles\Model\Apikeys\ClientTable;
-use Roles\Model\Apikeys\ClientAppTable;
 
 class RolesController extends AbstractRestfulController
 {
     protected $appTable;
     protected $clientTable;
     protected $clientAppTable;
+    protected $rollUpStoredProcedure;
     protected $errorResponseMessage = 'Method Not Supported';
 
     /* public get($data)
@@ -37,8 +35,7 @@ class RolesController extends AbstractRestfulController
             $ldap = $this->getLdap(); //from the service manager, reduces resource coupling
 
             $roles = $ldap->findRolesForUser($data['uname'], $data['appname']);
-            $locations = $ldap->findLocationsForUser($data['uname']);
-            $data = array($roles, $locations);
+            $data = array($roles, $this->getLocationIdsByUser($data['appname']));
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -101,6 +98,7 @@ class RolesController extends AbstractRestfulController
      * 
      * @access public
      * @return object (instance of the AppTable class)
+     * @TODO add to a factory and inject into controller
      */
     public function getAppTable()
     {
@@ -117,6 +115,7 @@ class RolesController extends AbstractRestfulController
      * 
      * @access public
      * @return object (instance of the ClientTable class)
+     * @TODO add to a factory and inject into controller
 
      */
     public function getClientTable()
@@ -134,6 +133,7 @@ class RolesController extends AbstractRestfulController
      * 
      * @access public
      * @return  object (instance of the ClientAppTable class)
+     * @TODO add to a factory and inject into controller
 
      */
     public function getClientAppTable()
@@ -145,14 +145,39 @@ class RolesController extends AbstractRestfulController
         return $this->clientAppTable;
     }
 
-    protected function getIdentifier($routeMatch, $request)
+    /* public getLocationIdsByUser($user)
+    /**
+     * getLocationIdsByUser
+     * 
+     * @param string user 
+     * @access public
+     * @return array
+     * @TODO add to a factory and inject into controller
+     */
+    public function getLocationIdsByUser($user)
     {
-       return $routeMatch->getParams();
+        if (!$this->rollUpStoredProcedure) {
+            $sm = $this->getServiceLocator();
+            $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
+            return $this->rollUpStoredProcedure->getLocationIdsByUser($user);
+        }
     }
 
+    /* protected getLdap()
+    /**
+     * getLdap
+     * 
+     * @access protected
+     * @return obj 
+     * @TODO add to a factory and inject into controller
+     */
     protected function getLdap()
     {
         return $this->getServiceLocator()->get('Roles\Model\Ldap');
     }
 
+    protected function getIdentifier($routeMatch, $request)
+    {
+       return $routeMatch->getParams();
+    }
 }

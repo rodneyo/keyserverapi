@@ -13,7 +13,7 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'dips' => array(
+            'roles' => array(
                 'type' => 'segment',
                 'options' => array(
                   'route' => '/roles/:uname/:appname',

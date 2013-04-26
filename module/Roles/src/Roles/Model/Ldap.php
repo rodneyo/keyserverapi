@@ -111,16 +111,6 @@ class Ldap
         }
     }
 
-    public function findLocationsForUser($user)
-    {
-      $locations = array('locations' => array (
-                          '118',
-                          '885',
-                          '115'
-                        )); 
-      return $locations;
-    }
-
     /* public setLdapOptions(array $config)
     /**
      * setLdapOptions
