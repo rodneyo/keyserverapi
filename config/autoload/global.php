@@ -22,6 +22,6 @@ return array(
     ),
     'appErrorMessages' => array(
        'getLocationsByUser'  => 'Problem encountered retrieving locations',
-       'getApproversAndPcardUsers'  => 'Problem retrieving field approvers and p-card users',
+       'getApproversByLocation'  => 'Problem retrieving field approvers',
      ),
 );

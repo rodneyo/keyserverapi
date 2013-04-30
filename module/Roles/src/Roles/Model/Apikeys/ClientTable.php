@@ -29,6 +29,7 @@ class ClientTable
      * @param string $apikey 
      * @access public
      * @return int
+     * @TODO make the xheader "x-stonemorapi" a config option
      */
     public function hasValidApiKey($apiRequestHeader)
     {

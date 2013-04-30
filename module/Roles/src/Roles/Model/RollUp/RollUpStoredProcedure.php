@@ -59,18 +59,18 @@ class  RollUpStoredProcedure
         }
     }
 
-    public function getApproversAndUsersByLocationId($location, $username)
+    public function getApproversByLocationId($location)
     {
         try 
         {
-          $approvers = array('approvers' => array('approver1', 'approver2', 'approver3'));
-          $pcardUsers = array('pcardUsers' => array('pcarduser1', 'pcarduser2', 'pcarduser3'));
-          return array($approvers, $pcardUsers);
+          $results = $this->rollUpAdapter->query('call GetApprovers(?)', array($location));
+          print_r($results); exit;
+
         }
         catch (\Exception $e)
         {
+            $this->appLogger->crit($e);
+            throw new \Exception($this->appErrorMessages['getApproversByLocation']);
         }
-
-
     }
 }
