@@ -63,9 +63,7 @@ class  RollUpStoredProcedure
     {
         try 
         {
-          $results = $this->rollUpAdapter->query('call GetApprovers(?)', array($location));
-          print_r($results); exit;
-
+          $results = $this->rollUpDbAdapter->query('call GetApprovers(?)', array($location));
         }
         catch (\Exception $e)
         {

@@ -8,8 +8,8 @@ namespace Roles;
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Roles\Controller\Roles' => 'Roles\Controller\RolesController', //maps controller alias to a physical controller
             'Roles\Controller\Approvers' => 'Roles\Controller\ApproversController', //maps controller alias to a physical controller
+            'Roles\Controller\Roles' => 'Roles\Controller\RolesController', //maps controller alias to a physical controller
         ),
     ),
     'router' => array(

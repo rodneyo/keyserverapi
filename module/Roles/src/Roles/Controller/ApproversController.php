@@ -7,14 +7,20 @@ class ApproversController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
 
+    /* public get($data)
+    /**
+     * get
+     * 
+     * @param mixed $data 
+     * @access public
+     * @return JSON
+     */
     public function get($data)
     {
-      return new JsonModel(array('location'=>'blah'));
-      /*
         try {
             $this->isValidApiRequest($data);
 
-            $data = array($this->getApproversByLocationId($data['location']));
+            $data = array($this->getApproversByLocation($data['location']));
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -24,7 +30,15 @@ class ApproversController extends ApiBaseController
         }
 
         return $this->getJson($data);
-       */
+    }
+
+    public function getApproversByLocation($location)
+    {
+        if (!$this->rollUpStoredProcedure) {
+          $sm = $this->getServiceLocator();
+          $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
+          return $this->rollUpStoredProcedure->getApproversByLocationId($location);
+        }
     }
 
     /* protected getJson($data)
@@ -39,12 +53,8 @@ class ApproversController extends ApiBaseController
       return new JsonModel($data);
     }
 
-    public function getApproversByLocationId($location)
+    protected function getIdentifier($routeMatch, $request)
     {
-        if (!$this->rollUpStoredProcedure) {
-            $sm = $this->getServiceLocator();
-            $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
-            return $this->rollUpStoredProcedure->getApproversByLocationId($location);
-        }
+       return $routeMatch->getParams();
     }
 }
