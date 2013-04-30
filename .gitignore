@@ -10,3 +10,4 @@ composer.lock
 tmp/
 *.log
 build/*
+module/Roles/test/build/*
