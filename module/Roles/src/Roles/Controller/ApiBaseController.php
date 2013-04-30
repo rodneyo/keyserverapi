@@ -2,6 +2,7 @@
 namespace Roles\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\View\Model\JsonModel;
 
 /**
  * ApiBaseController 
@@ -72,6 +73,19 @@ class ApiBaseController extends AbstractRestfulController
         return $this->clientTable;
     }
 
+    /* protected getJson($data)
+     * getJson
+     * 
+     * @param mixed $data 
+     * @access protected
+     * @return zend JsonModel
+     */
+    protected function getJson(array $data)
+    {
+      return new JsonModel($data);
+    }
+
+
     /* public get($data)
     /**
      * get
@@ -112,5 +126,10 @@ class ApiBaseController extends AbstractRestfulController
     }
     public function getList()
     {
+    }
+
+    protected function getIdentifier($routeMatch, $request)
+    {
+       return $routeMatch->getParams();
     }
 }

@@ -35,18 +35,6 @@ class RolesController extends ApiBaseController
         return $this->getJson($data);
     }
 
-    /* protected getJson($data)
-     * getJson
-     * 
-     * @param mixed $data 
-     * @access protected
-     * @return zend JsonModel
-     */
-    protected function getJson(array $data)
-    {
-      return new JsonModel($data);
-    }
-
     /* public getLocationIdsByUser($user)
     /**
      * getLocationIdsByUser
@@ -76,10 +64,5 @@ class RolesController extends ApiBaseController
     protected function getLdap()
     {
         return $this->getServiceLocator()->get('Roles\Model\Ldap');
-    }
-
-    protected function getIdentifier($routeMatch, $request)
-    {
-       return $routeMatch->getParams();
     }
 }

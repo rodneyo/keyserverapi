@@ -59,9 +59,6 @@ class JsonExceptionStrategy extends ExceptionStrategy
                 break;
 
             case Application::ERROR_EXCEPTION:
-                $exception = $e->getParam('exception');
-                print_r($exception->getMessage()); exit;
-                break;
             default:
                 $exception = $e->getParam('exception');
                 $modelData = array(

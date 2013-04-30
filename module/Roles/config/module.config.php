@@ -10,6 +10,7 @@ return array(
         'invokables' => array(
             'Roles\Controller\Approvers' => 'Roles\Controller\ApproversController', //maps controller alias to a physical controller
             'Roles\Controller\Roles' => 'Roles\Controller\RolesController', //maps controller alias to a physical controller
+            'Roles\Controller\AllUsers' => 'Roles\Controller\AllUsersController', //maps controller alias to a physical controller
         ),
     ),
     'router' => array(
@@ -24,6 +25,18 @@ return array(
                  ),
                  'defaults' => array(
                      'controller' => 'Roles/Controller/Approvers',
+                  ),
+                ),
+            ),
+            'allusers' => array(
+                'type' => 'segment',
+                'options' => array(
+                  'route' => '/allusers/:appname',
+                  'constraints' => array(
+                    'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                 ),
+                 'defaults' => array(
+                     'controller' => 'Roles/Controller/AllUsers',
                   ),
                 ),
             ),

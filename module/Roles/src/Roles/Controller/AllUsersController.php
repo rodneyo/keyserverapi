@@ -1,7 +1,7 @@
 <?php
 namespace Roles\Controller;
 
-class ApproversController extends ApiBaseController
+class AllUsersController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
 
@@ -18,7 +18,7 @@ class ApproversController extends ApiBaseController
         try {
             $this->isValidApiRequest($data);
 
-            $data = array($this->getApproversByLocation($data['location']));
+            $data = array($this->getAllUsers());
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -30,12 +30,12 @@ class ApproversController extends ApiBaseController
         return $this->getJson($data);
     }
 
-    public function getApproversByLocation($location)
+    public function getAllUsers()
     {
         if (!$this->rollUpStoredProcedure) {
           $sm = $this->getServiceLocator();
           $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
-          return $this->rollUpStoredProcedure->getApproversByLocationId($location);
+          return $this->rollUpStoredProcedure->getAllUsers();
         }
     }
 }
