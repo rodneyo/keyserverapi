@@ -23,7 +23,7 @@ class RolesController extends ApiBaseController
             $ldap = $this->getLdap();
 
             $roles = $ldap->findRolesForUser($data['uname'], $data['appname']);
-            $data = array($roles, $this->getLocationIdsByUser($data['appname']));
+            $data = array($roles, $this->getLocationIdsByUser($data['uname']));
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
