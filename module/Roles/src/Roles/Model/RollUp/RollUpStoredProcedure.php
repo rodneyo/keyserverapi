@@ -6,6 +6,8 @@ namespace Roles\Model\RollUp;
  * 
  * @copyright Copyright (c) 2013 All rights reserved.
  * @author  StoneMor Parnterns
+ * @TODO Create a factory to create the stored procedure calls and. This will reduce
+ * duplication and allow the procedure names to be abstracted out into a config
  */
 class  RollUpStoredProcedure
 {
@@ -44,7 +46,8 @@ class  RollUpStoredProcedure
         $locations = array('locations' => array());
         try 
         {
-           $results = $this->rollUpDbAdapter->query('call GetLocationsByUser(?)', array($username));
+           $statement = $this->rollUpDbAdapter->createStatement('call GetLocationsByUser(?)', array($username));
+           $results = $statement->execute();
            foreach ($results as $result)
            {
              $locations['locations'][$ctr] = $result['location_code'];
@@ -59,18 +62,72 @@ class  RollUpStoredProcedure
         }
     }
 
-    public function getApproversAndUsersByLocationId($location, $username)
+    /* public getApproversByLocationId($location)
+    /**
+     * getApproversByLocationId
+     * 
+     * @param mixed $location 
+     * @access public
+     * @return array
+     */
+    public function getApproversByLocationId($location)
     {
+        $ctr = 0;
+
+        $displayName = array('displayname' => array());
+        $userName = array('username' => array());
+
         try 
         {
-          $approvers = array('approvers' => array('approver1', 'approver2', 'approver3'));
-          $pcardUsers = array('pcardUsers' => array('pcarduser1', 'pcarduser2', 'pcarduser3'));
-          return array($approvers, $pcardUsers);
+          $statement = $this->rollUpDbAdapter->createStatement('call GetApprovers(?)', array($location));
+          $results = $statement->execute();
+          foreach ($results as $row)
+          {
+            $userName['username'][$ctr] = trim($row['user_profile']);
+            $displayName['displayname'][$ctr] = trim($row['display_name']);
+            $ctr++;
+          }
+          return array_merge($userName, $displayName);
         }
         catch (\Exception $e)
         {
+            $this->appLogger->crit($e);
+            throw new \Exception($this->appErrorMessages['getApproversByLocation']);
         }
+    }
 
+    /* public getAllUsers()
+    /**
+     * getAllUsers
+     * 
+     * @access public
+     * @return array
+     */
+    public function getAllUsers()
+    {
+        $ctr = 0;
 
+        $displayName = array('displayname' => array());
+        $userName = array('username' => array());
+        $email = array('email' => array());
+
+        try 
+        {
+          $statement = $this->rollUpDbAdapter->createStatement('call GetAllUsers');
+          $results = $statement->execute();
+          foreach ($results as $row)
+          {
+            $userName['username'][$ctr] = trim($row['user_profile']);
+            $displayName['displayname'][$ctr] = trim($row['display_name']);
+            $email['email'][$ctr] = trim($row['email']);
+            $ctr++;
+          }
+          return array_merge($userName, $displayName, $email);
+        }
+        catch (\Exception $e)
+        {
+            $this->appLogger->crit($e);
+            throw new \Exception($this->appErrorMessages['getApproversByLocation']);
+        }
     }
 }
