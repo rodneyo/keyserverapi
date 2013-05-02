@@ -10,7 +10,7 @@ use Zend\View\Model\JsonModel;
  * @uses AbstractRestfulController
  * @author StoneMor Partners
  */
-class ApiBaseController extends AbstractRestfulController
+abstract class ApiBaseController extends AbstractRestfulController
 {
     protected $appTable;
     protected $clientTable;
@@ -85,16 +85,6 @@ class ApiBaseController extends AbstractRestfulController
       return new JsonModel($data);
     }
 
-
-    /* public get($data)
-    /**
-     * get
-     * 
-     * @param mixed $data 
-     * @access public
-     * @return JSON
-     */
-    public function get($data) {}
 
     /*
      * edit, delete, create, update and options methods must be implemented

@@ -45,92 +45,19 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->setEvent($this->event);
         $this->controller->setServiceLocator($serviceManager);
     }
- 
-    public function testGetRolesReturnValidJSONModel()
-    {
-        $this->request->setMethod('GET');
-        $result = $this->controller->dispatch($this->request);
-        $this->assertInstanceOf('Zend\View\Model\JsonModel', $result);
-    }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage application is disabled for client or does not exist
+     */
     public function testGetRolesReturnJSONExceptionOnError()
     {
         $this->routeMatch->setParam('appname', 'xxx');
 
-        try {
           $this->request->setMethod('GET');
           $result = $this->controller->dispatch($this->request);
-        }
-        catch (\Exception $expected) {
-          return;
-        }
-        $this->fail('Invalid Parameter Exception was not thrown');
-
     }
 
-    public function testApiPostIsInvalid()
-    {
-        try {
-            $this->request->setMethod('POST');
-            $result = $this->controller->dispatch($this->request);
-            $response = $this->controller->getResponse();
-        }
-        catch (\Exception $e) {
-           $this->assertEquals('Method Not Supported', $e->getMessage()); 
-           return;
-        }
-
-        $this->fail('Did not fail on POST to API');
-    }
-
-    public function testApiPutIsInvalid()
-    {
-        try {
-            $this->request->setMethod('PUT');
-            $result = $this->controller->dispatch($this->request);
-            $response = $this->controller->getResponse();
-        } 
-        catch (\Exception $e) {
-            $this->assertEquals('Method Not Supported', $e->getMessage()); 
-            return;
-        }
-        $this->fail('Did not fail on PUT to API');
-    }
-
-    public function testApiDeleteIsInvalid()
-    {
-        try {
-            $this->request->setMethod('DELETE');
-            $result = $this->controller->dispatch($this->request);
-            $response = $this->controller->getResponse();
-        } 
-        catch (\Exception $e) {
-            $this->assertEquals('Method Not Supported', $e->getMessage());
-            return;
-        }
-        $this->fail('Did not fail on DELETE to API');
-    }
-
-    public function testGetAppTableReturnsInstanceOfAppTable()
-    {
-        $this->assertInstanceOf('Roles\Model\Apikeys\AppTable', $this->controller->getAppTable());
-    }
-
-    public function testGetClientTableReturnsInstanceOfClientTable()
-    {
-      $this->assertInstanceOf(
-                'Roles\Model\Apikeys\ClientTable', 
-                $this->controller->getClientTable()
-              );
-    }
-
-    public function testGetClientAppTableReturnsInstanceOfClientAppTable()
-    {
-      $this->assertInstanceOf(
-                'Roles\Model\ApiKeys\ClientAppTable',
-                $this->controller->getClientAppTable()
-              );
-    }
 
     public function testCanConnectToAd()
     {
