@@ -46,6 +46,15 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->setServiceLocator($serviceManager);
     }
 
+    public function testCanGetRolesAndLocations()
+    {
+        $rollUpDbStub = $this->getMock('RolesController');
+    }
+
+    public function getLdap()
+    {
+    }
+
     /**
      * @expectedException Exception
      * @expectedExceptionMessage application is disabled for client or does not exist
@@ -56,20 +65,5 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
 
           $this->request->setMethod('GET');
           $result = $this->controller->dispatch($this->request);
-    }
-
-
-    public function testCanConnectToAd()
-    {
-        $ldap = new Ldap($this->ldapOptions['ldap']['server1']);
-        $this->assertInstanceOf('Zend\Ldap\Ldap', $ldap, 'Not an instance of Zend Ldap');
-
-        $ldap->bind($this->ldapOptions['client']['username'],
-                    $this->ldapOptions['client']['password']
-                  );
-        $acctName = $ldap->getCanonicalAccountName($this->ldapOptions['client']['username']);
-        $expectedAcctName = 'STONEMOR\\' . $this->ldapOptions['client']['username'];
-
-        $this->assertTrue($acctName === $expectedAcctName, 'Could not bind to AD');
     }
 }
