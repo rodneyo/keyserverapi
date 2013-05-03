@@ -53,7 +53,6 @@ class Ldap
                 try {
                     $this->ldap->setOptions($server);
                     $this->ldap->bind($this->userName, $this->userPassword);
-                    $acctname = $this->ldap->getCanonicalAccountName($this->userName);
                     $tries = 999;
                     break; //the bind was successful, break out of all loops
                 } 
