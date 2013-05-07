@@ -6,6 +6,13 @@ use Zend\View\Model\JsonModel;
 class RolesController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
+    protected $ldap;
+
+    public function __construct($ldap, $rollUpDbProcedure)
+    {
+        $this->rollUpStoredProcedure = $rollUpDbProcedure;
+        $this->ldap = $ldap;
+    }
 
     /* public get($data)
     /**
@@ -20,9 +27,7 @@ class RolesController extends ApiBaseController
         try {
             $this->isValidApiRequest($data);
 
-            $ldap = $this->getLdap();
-
-            $roles = $ldap->findRolesForUser($data['uname'], $data['appname']);
+            $roles = $this->ldap->findRolesForUser($data['uname'], $data['appname']);
             $data = array($roles, $this->getLocationIdsByUser($data['uname']));
         }
         catch (\Exception $e) {
@@ -46,23 +51,6 @@ class RolesController extends ApiBaseController
      */
     public function getLocationIdsByUser($user)
     {
-        if (!$this->rollUpStoredProcedure) {
-            $sm = $this->getServiceLocator();
-            $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
-            return $this->rollUpStoredProcedure->getLocationIdsByUser($user);
-        }
-    }
-
-    /* protected getLdap()
-    /**
-     * getLdap
-     * 
-     * @access protected
-     * @return obj 
-     * @TODO add to a factory and inject into controller
-     */
-    protected function getLdap()
-    {
-        return $this->getServiceLocator()->get('Roles\Model\Ldap');
+        return $this->rollUpStoredProcedure->getLocationIdsByUser($user);
     }
 }

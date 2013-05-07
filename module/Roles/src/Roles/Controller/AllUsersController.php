@@ -5,6 +5,11 @@ class AllUsersController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
 
+    public function __construct($rollUpDbProcedure)
+    {
+        $this->rollUpStoredProcedure = $rollUpDbProcedure;
+    }
+
     /* public get($data)
     /**
      * get
@@ -30,12 +35,15 @@ class AllUsersController extends ApiBaseController
         return $this->getJson($data);
     }
 
+    /* public getAllUsers()
+    /**
+     * getAllUsers
+     * 
+     * @access public
+     * @return void
+     */
     public function getAllUsers()
     {
-        if (!$this->rollUpStoredProcedure) {
-          $sm = $this->getServiceLocator();
-          $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
-          return $this->rollUpStoredProcedure->getAllUsers();
-        }
+        return $this->rollUpStoredProcedure->getAllUsers();
     }
 }

@@ -31,6 +31,40 @@ class Module
         );
     }
 
+    /* public getControllerConfig() {{{ */ 
+    /**
+     * getControllerConfig
+     *
+     * Use closure to pass in a factory to create conroller instance and inject 
+     * dependencies
+     * 
+     * @access public
+     * @return object 
+     */
+    public function getControllerConfig()
+    {
+      return array (
+        'factories' => array (
+          'Roles\Controller\RolesController' => function($sm) {
+              $ldap = $sm->getServiceLocator()->get('Roles\Model\Ldap');
+              $rollUpStoredProcedure = $sm->getServiceLocator()->get('RollUpStoredProcedure');
+              $controller = new Controller\RolesController($ldap, $rollUpStoredProcedure);
+              return $controller;
+            },
+          'Roles\Controller\ApproversController' => function($sm) {
+              $rollUpStoredProcedure = $sm->getServiceLocator()->get('RollUpStoredProcedure');
+              $controller = new Controller\ApproversController($rollUpStoredProcedure);
+              return $controller;
+            },
+          'Roles\Controller\AllUsersController' => function($sm) {
+              $rollUpStoredProcedure = $sm->getServiceLocator()->get('RollUpStoredProcedure');
+              $controller = new Controller\AllUsersController($rollUpStoredProcedure);
+              return $controller;
+            }
+         )
+      );
+    }
+
     public function getServiceConfig()
     {
       return array (

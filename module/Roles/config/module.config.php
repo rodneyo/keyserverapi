@@ -2,17 +2,13 @@
 /**
  * Informs the service manager where to find the different controllers 
  * and view files
+ *
+ * Controllers are invoked via closure factories in Module.php
+ * in method getControllerConfig
  */
 namespace Roles;
 
 return array(
-    'controllers' => array(
-        'invokables' => array(
-            'Roles\Controller\Approvers' => 'Roles\Controller\ApproversController', //maps controller alias to a physical controller
-            'Roles\Controller\Roles' => 'Roles\Controller\RolesController', //maps controller alias to a physical controller
-            'Roles\Controller\AllUsers' => 'Roles\Controller\AllUsersController', //maps controller alias to a physical controller
-        ),
-    ),
     'router' => array(
         'routes' => array(
             'approvers' => array(
@@ -24,7 +20,7 @@ return array(
                     'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
                  ),
                  'defaults' => array(
-                     'controller' => 'Roles/Controller/Approvers',
+                     'controller' => 'Roles/Controller/ApproversController',
                   ),
                 ),
             ),
@@ -36,7 +32,7 @@ return array(
                     'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
                  ),
                  'defaults' => array(
-                     'controller' => 'Roles/Controller/AllUsers',
+                     'controller' => 'Roles/Controller/AllUsersController',
                   ),
                 ),
             ),
@@ -49,7 +45,7 @@ return array(
                     'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
                  ),
                  'defaults' => array(
-                     'controller' => 'Roles/Controller/Roles',
+                     'controller' => 'Roles/Controller/RolesController',
                   ),
                 ),
             ),

@@ -36,7 +36,7 @@ class Ldap
         $this->bindToServer();
     }
 
-    /* protected bindToServer(array $options) {{{ */ 
+    /* protected bindToServer(array $options)
     /**
      * bindToServer
      * 
@@ -88,7 +88,7 @@ class Ldap
 
         $results = $this->ldap->searchEntries($searchString);
 
-        if (count($results) > 0) {
+        if (count($results) > 0 && array_key_exists('memberof', $results[0])) {
           $members = $results[0]['memberof'];
 
           foreach ($members as $member) {
@@ -102,11 +102,11 @@ class Ldap
           if (count($this->roles) > 0) {
             return array('roles' => $this->roles);
           } else {
-            return array('roles');
+            return array('roles' => array());
           }
 
         } else {
-          return array('roles');
+          return array('roles' => array());
         }
     }
 
