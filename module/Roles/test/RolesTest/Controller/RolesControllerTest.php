@@ -48,7 +48,6 @@ class RolesControllerTest extends PHPUnit_Framework_TestCase
 
     public function testCanGetRolesAndLocations()
     {
-        $rollUpDbStub = $this->getMock('RolesController');
     }
 
     public function getLdap()

@@ -5,6 +5,11 @@ class ApproversController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
 
+    public function __construct($rollUpStoredProcedure)
+    {
+        $this->rollUpStoredProcedure = $rollUpStoredProcedure;
+    }
+
     /* public get($data)
     /**
      * get
@@ -30,12 +35,16 @@ class ApproversController extends ApiBaseController
         return $this->getJson($data);
     }
 
+    /* public getApproversByLocation($location)
+    /**
+     * getApproversByLocation
+     * 
+     * @param mixed $location 
+     * @access public
+     * @return array
+     */
     public function getApproversByLocation($location)
     {
-        if (!$this->rollUpStoredProcedure) {
-          $sm = $this->getServiceLocator();
-          $this->rollUpStoredProcedure = $sm->get('RollUpStoredProcedure');
-          return $this->rollUpStoredProcedure->getApproversByLocationId($location);
-        }
+        return $this->rollUpStoredProcedure->getApproversByLocationId($location);
     }
 }
