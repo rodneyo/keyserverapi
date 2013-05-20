@@ -21,9 +21,12 @@ DIPS: (Deposit, Invoice, PCard, Scanning).
  - Calls
     - roles/[username]/[appname]
     - roles/[location]/[username]
+    - roles/allusers/[appname]
  - Returns
     - JSON object containing a list of roles from Active Directory
     - JSON object containing a list of approvers from MySQL database
+    - JSON object containing a list of all users, email addresses and
+      display names (dump from Active Directory)
 
 Upgrading ZF2 vendor library
 ----------------------------
