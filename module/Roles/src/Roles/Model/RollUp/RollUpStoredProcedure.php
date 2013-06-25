@@ -32,7 +32,7 @@ class  RollUpStoredProcedure
     }
 
     /* public getLocationIdsByUser($username)
-    /**
+     *
      * getLocationIdsByUser
      *
      * Return a list of location ids a user is assigned to
@@ -73,9 +73,7 @@ class  RollUpStoredProcedure
     public function getApproversByLocationId($location)
     {
         $ctr = 0;
-
-        $displayName = array('displayname' => array());
-        $userName = array('username' => array());
+        $approvers = array();
 
         try 
         {
@@ -83,11 +81,12 @@ class  RollUpStoredProcedure
           $results = $statement->execute();
           foreach ($results as $row)
           {
-            $userName['username'][$ctr] = trim($row['user_profile']);
-            $displayName['displayname'][$ctr] = trim($row['display_name']);
+            $approvers[$ctr] = array('username' => trim($row['user_profile']),
+                                     'displayname' => trim($row['display_name'])
+                                    );
             $ctr++;
           }
-          return array_merge($userName, $displayName);
+          return $approvers;
         }
         catch (\Exception $e)
         {

@@ -52,8 +52,14 @@ class Module
               return $controller;
             },
           'Roles\Controller\ApproversController' => function($sm) {
+              $config = $sm->getServiceLocator()->get('Config');
+              $ldap = $sm->getServiceLocator()->get('Roles\Model\Ldap');
               $rollUpStoredProcedure = $sm->getServiceLocator()->get('RollUpStoredProcedure');
-              $controller = new Controller\ApproversController($rollUpStoredProcedure);
+              $controller = new Controller\ApproversController(
+                                                               $ldap, 
+                                                               $rollUpStoredProcedure,
+                                                               $config['filtergroups']['approverfilter']
+                                                              );
               return $controller;
             },
           'Roles\Controller\AllUsersController' => function($sm) {
@@ -88,8 +94,8 @@ class Module
               return $table;
             },
           'AppTableGateway' => function ($sm) {
-               $appDbAdapter = $sm->get('apiDB');
                return new TableGateway('app', $appDbAdapter, null);
+               $appDbAdapter = $sm->get('apiDB');
             },
           'Roles\Model\Apikeys\ClientTable' => function($sm) {
               $tableGateway = $sm->get('ClientTableGateway');
