@@ -94,8 +94,8 @@ class Module
               return $table;
             },
           'AppTableGateway' => function ($sm) {
-               return new TableGateway('app', $appDbAdapter, null);
                $appDbAdapter = $sm->get('apiDB');
+               return new TableGateway('app', $appDbAdapter, null);
             },
           'Roles\Model\Apikeys\ClientTable' => function($sm) {
               $tableGateway = $sm->get('ClientTableGateway');
