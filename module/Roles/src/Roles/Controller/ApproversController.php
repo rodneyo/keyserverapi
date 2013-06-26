@@ -4,10 +4,14 @@ namespace Roles\Controller;
 class ApproversController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
+    protected $ldap;
+    protected $approverFilter;
 
-    public function __construct($rollUpStoredProcedure)
+    public function __construct($ldap, $rollUpStoredProcedure, $filter)
     {
         $this->rollUpStoredProcedure = $rollUpStoredProcedure;
+        $this->ldap = $ldap;
+        $this->approverFilter = $filter;
     }
 
     /* public get($data)
@@ -23,7 +27,8 @@ class ApproversController extends ApiBaseController
         try {
             $this->isValidApiRequest($data);
 
-            $data = array($this->getApproversByLocation($data['location']));
+            $approvers = $this->getApproversByLocation($data['location']);
+            $filteredApprovers = $this->ldap->filterApproversByGroup($approvers, $this->approverFilter);
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -32,7 +37,7 @@ class ApproversController extends ApiBaseController
             throw new \Exception($e->getMessage());
         }
 
-        return $this->getJson($data);
+        return $this->getJson($filteredApprovers);
     }
 
     /* public getApproversByLocation($location)

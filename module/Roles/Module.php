@@ -52,8 +52,14 @@ class Module
               return $controller;
             },
           'Roles\Controller\ApproversController' => function($sm) {
+              $config = $sm->getServiceLocator()->get('Config');
+              $ldap = $sm->getServiceLocator()->get('Roles\Model\Ldap');
               $rollUpStoredProcedure = $sm->getServiceLocator()->get('RollUpStoredProcedure');
-              $controller = new Controller\ApproversController($rollUpStoredProcedure);
+              $controller = new Controller\ApproversController(
+                                                               $ldap, 
+                                                               $rollUpStoredProcedure,
+                                                               $config['filtergroups']['approverfilter']
+                                                              );
               return $controller;
             },
           'Roles\Controller\AllUsersController' => function($sm) {

@@ -110,6 +110,52 @@ class Ldap
         }
     }
 
+    /* public filterApproversByGroup($approvers, $filterGroup)
+    /**
+     * filterApproversByGroup
+     * Filter approvers by a given group
+     * 
+     * @param array $approvers 
+     * @param string $filterGroup 
+     * @access public
+     * @return array
+     */
+    public function filterApproversByGroup(array $approvers, $filterGroup)
+    {
+        $filteredApprovers = array();
+        $f1 = LdapFilter::equals('objectClass', 'Person');
+        $searchString = LdapFilter::andFilter($f1);
+
+        foreach ($approvers as $approver) {
+
+          $f2 = LdapFilter::equals('samaccountname', $approver['username']);
+          $searchString = LdapFilter::andFilter($f1, $f2);
+
+          $appSearchPattern = '/.*CN=' . $filterGroup . ',/';
+
+          $results = $this->ldap->searchEntries($searchString);
+
+          if (count($results) > 0 && array_key_exists('memberof', $results[0])) {
+            $memberOf = $results[0]['memberof'];
+
+            foreach ($memberOf as $member) {
+              if (preg_match($appSearchPattern, $member, $appMatch)) {
+                  $filteredApprovers[] = array('username' => strtolower($approver['username']),
+                                               'displayname' => $approver['displayname']
+                                              );
+              }
+            }
+          }
+        }
+
+        if (count($filteredApprovers) > 0) {
+          return $filteredApprovers;
+        } else {
+          return $filteredApprovers[] = array('username' => '', 'displayname' => '');
+        }
+    }
+
+
     /* public setLdapOptions(array $config)
     /**
      * setLdapOptions
