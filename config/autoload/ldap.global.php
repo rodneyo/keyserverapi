@@ -15,8 +15,8 @@ return array(
   'ldap' => array(
     'server1' => array(
       'host' => 'activedirectory.stonemor.com',
-      'useSsl' => true,
-      'port' => 636,
+      'useSsl' => false,
+      'port' => 389,
       'accountDomainName' => 'stonemor.com',
       'accountDomainNameShort' => 'STONEMOR',
       'accountCanonicalForm' => 3,
