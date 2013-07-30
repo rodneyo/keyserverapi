@@ -29,6 +29,13 @@ class ApproversController extends ApiBaseController
 
             $approvers = $this->getApproversByLocation($data['location']);
             $filteredApprovers = $this->ldap->filterApproversByGroup($approvers, $this->approverFilter);
+    
+            //temporary fix to get the array back into the previous format for the DIPS caller
+            foreach ($filteredApprovers as $approver) {
+              $userName['username'][] = $approver['username'];
+              $userEmail['displayname'][] = $approver['displayname'];
+            }
+            $approversArray[] = array_merge($userName, $userEmail);
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -37,7 +44,7 @@ class ApproversController extends ApiBaseController
             throw new \Exception($e->getMessage());
         }
 
-        return $this->getJson($filteredApprovers);
+        return $this->getJson($approversArray);
     }
 
     /* public getApproversByLocation($location)
