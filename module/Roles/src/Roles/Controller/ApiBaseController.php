@@ -36,6 +36,24 @@ abstract class ApiBaseController extends AbstractRestfulController
         return $clientId;
     }
 
+    public function detectRunTimeEnvironment($urlParams)
+    {
+      if (array_key_exists('APPLICATION_ENV', $_SERVER)) {
+        switch ($_SERVER['APPLICATION_ENV']) {
+          case 'testing':
+          case 'development':
+            $urlParams['appname'] .= '-test';
+            break;
+
+          case 'production':
+            $urlParams['appname'] .= '-PROD';
+            break;
+
+        }
+      }
+      return $urlParams;
+    }
+
     /* public getClientAppTable()
     /**
      * getClientAppTable
@@ -82,9 +100,8 @@ abstract class ApiBaseController extends AbstractRestfulController
      */
     protected function getJson(array $data)
     {
-      return new JsonModel($data);
+      return $jsonData = new JsonModel($data);
     }
-
 
     /*
      * edit, delete, create, update and options methods must be implemented

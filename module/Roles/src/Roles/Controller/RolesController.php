@@ -26,9 +26,10 @@ class RolesController extends ApiBaseController
     {
         try {
             $this->isValidApiRequest($data);
+            $data = $this->detectRunTimeEnvironment($data);
 
             $roles = $this->ldap->findRolesForUser($data['uname'], $data['appname']);
-            $data = array($roles, $this->getLocationIdsByUser($data['uname']));
+            $approvers = array($roles, $this->getLocationIdsByUser($data['uname']));
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -37,7 +38,13 @@ class RolesController extends ApiBaseController
             throw new \Exception($e->getMessage());
         }
 
-        return $this->getJson($data);
+        // Until we get a separate domain controller for AD we have to do this tacky hack
+        // to remove the prepended app name from the role before sending it back. 
+        foreach ($approvers[0] as $key=>$value) {
+          $regex = '/' .  $data['appname'] . '/i';
+          $approvers[0][$key] = preg_replace($regex, '', $value);
+        }
+        return $this->getJson($approvers);
     }
 
     /* public getLocationIdsByUser($user)

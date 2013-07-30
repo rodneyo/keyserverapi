@@ -83,8 +83,8 @@ class Ldap
         $f2 = LdapFilter::equals('samaccountname', $user);
         $searchString = LdapFilter::andFilter($f1, $f2);
 
-        $appSearchPattern = '/.*OU=' . strtoupper($appName) . ',/';
-        $roleSearchPattern = '/CN=(.*?),/';
+        $appSearchPattern = '/.*OU=' . strtoupper($appName) . ',/i';
+        $roleSearchPattern = '/CN=(.*?),/i';
 
         $results = $this->ldap->searchEntries($searchString);
 
