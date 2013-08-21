@@ -40,10 +40,8 @@ class RolesController extends ApiBaseController
 
         // Until we get a separate domain controller for AD we have to do this tacky hack
         // to remove the prepended app name from the role before sending it back. 
-        foreach ($approvers[0] as $key=>$value) {
-          $regex = '/' .  $data['appname'] . '/i';
-          $approvers[0][$key] = preg_replace($regex, '', $value);
-        }
+        $approvers = $this->checkAndRemoveTestEnv($approvers, $data['appname']);
+
         return $this->getJson($approvers);
     }
 

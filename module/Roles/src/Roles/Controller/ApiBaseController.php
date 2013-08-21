@@ -16,6 +16,7 @@ abstract class ApiBaseController extends AbstractRestfulController
     protected $clientTable;
     protected $clientAppTable;
     protected $errorResponseMessage = 'Method Not Supported';
+    public    $testEnvironment = False;
 
     /* public isValidApiRequest($requestData)
     /**
@@ -43,15 +44,37 @@ abstract class ApiBaseController extends AbstractRestfulController
           case 'testing':
           case 'development':
             $urlParams['appname'] .= '-test';
+            $this->testEnvironment = True;
             break;
 
           case 'production':
             $urlParams['appname'] .= '-PROD';
+            $this->testEnvironment = False;
             break;
 
         }
       }
       return $urlParams;
+    }
+
+    /* public checkAndRemoveTestEnv(array $checkData, $appname='')
+    /**
+     * checkAndRemoveTestEnv
+     * 
+     * @param array $checkData 
+     * @param string $appname 
+     * @access public
+     * @return array
+     */
+    public function checkAndRemoveTestEnv(array $checkData, $appname='')
+    {
+        if ($this->testEnvironment) {
+          foreach ($checkData[0] as $key=>$value) {
+            $regex = '/' .  $appname . '/i';
+            $checkData[0][$key] = preg_replace($regex, '', $value);
+          }
+          return $checkData;
+        }
     }
 
     /* public getClientAppTable()
