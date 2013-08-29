@@ -73,8 +73,8 @@ abstract class ApiBaseController extends AbstractRestfulController
             $regex = '/' .  $appname . '/i';
             $checkData[0][$key] = preg_replace($regex, '', $value);
           }
-          return $checkData;
         }
+		return $checkData;
     }
 
     /* public getClientAppTable()
