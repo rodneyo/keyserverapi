@@ -151,7 +151,7 @@ class Ldap
         if (count($filteredApprovers) > 0) {
           return $filteredApprovers;
         } else {
-          return $filteredApprovers[] = array('username' => '', 'displayname' => '');
+          return array($filteredApprovers[] = array('username' => '', 'displayname' => ''));
         }
     }
 
