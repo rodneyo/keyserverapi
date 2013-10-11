@@ -50,7 +50,7 @@ class  RollUpStoredProcedure
            $results = $statement->execute();
            foreach ($results as $result)
            {
-             $locations['locations'][$ctr] = $result['location_code'];
+             $locations['locations'][$ctr] = trim($result['location_code']);
              $ctr++;
            }
            return $locations;
