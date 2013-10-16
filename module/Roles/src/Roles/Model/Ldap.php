@@ -84,7 +84,7 @@ class Ldap
         $objectCatPersonFilter = LdapFilter::equals('objectCategory', 'person');
         $samaccountNameFilter = LdapFilter::equals('samaccountname', $user);
         $objectCatGroupFilter = LdapFilter::equals('ObjectCategory', 'group');
-        $recursiveMemberGroupFilter = 'member:1.2.840.113556.1.4.1941:';
+        $recursiveMemberGroupFilter = 'member:1.2.840.113556.1.4.1941:'; //magic AD recurse number
 
         $searchString = LdapFilter::andFilter($objectCatPersonFilter, $samaccountNameFilter);
         $roleSearchPattern = '/cn=(.*?),ou=' . $appName . '+?,/i';
@@ -94,7 +94,6 @@ class Ldap
             $fullUserDN = $result['distinguishedname'][0];
         }
 
-        //This magic number in AD tells it search recursively for roles/groups
         $f1 = LdapFilter::equals($recursiveMemberGroupFilter, $fullUserDN);
         $results = $this->ldap->searchEntries($f1);
 
@@ -115,7 +114,7 @@ class Ldap
 
             } else {
 
-                //Are they direct members of a group
+                //Are they direct members of a group/role
                 $directGroupMember = LdapFilter::equals('member', $fullUserDN);
                 $searchString = LdapFilter::andFilter($objectCatGroupFilter, $directGroupMember);
                 $results = $this->ldap->searchEntries($searchString);
