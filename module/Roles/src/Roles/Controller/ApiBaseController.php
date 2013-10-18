@@ -70,7 +70,7 @@ abstract class ApiBaseController extends AbstractRestfulController
     {
         if ($this->testEnvironment) {
           foreach ($checkData[0] as $key=>$value) {
-            $regex = '/' .  $appname . '/i';
+            $regex = '/' .  $appname . '\s?/i';
             $checkData[0][$key] = preg_replace($regex, '', $value);
           }
         }

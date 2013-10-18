@@ -102,7 +102,7 @@ class Ldap
                 if (array_key_exists('memberof', $result)) {
                     foreach ($result['memberof'] as $memberof) {
                         if (preg_match($roleSearchPattern, $memberof, $roleMatches)) {
-                            $this->roles[] = $roleMatches[1];
+                            $this->roles[] = trim($roleMatches[1]);
                         }
                     }
                 }
@@ -122,7 +122,7 @@ class Ldap
                 if (count($results) > 0) {
                     foreach ($results as $result) {
                         if (preg_match($roleSearchPattern, $result['dn'], $roleMatches)) {
-                            $this->roles[] = $roleMatches[1];
+                            $this->roles[] = trim($roleMatches[1]);
                         }
                     }
 
