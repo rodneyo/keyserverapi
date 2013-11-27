@@ -22,7 +22,7 @@ class Ldap
     protected $userPassword;
     protected $auth;
     protected $adapter;
-    protected $roles = array();
+    protected $roles;
     protected $emptyRoles = array('roles' => array());
 
     public function __construct(array $config, $appLogger)
@@ -111,7 +111,7 @@ class Ldap
             }
 
             if (count($this->roles) > 0) {
-                  return array('roles' => $this->roles);
+                return array('roles' => $this->roles);
 
             } else {
 
