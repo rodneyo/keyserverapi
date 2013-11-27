@@ -12,7 +12,7 @@ use Zend\Ldap\Exception\LdapException as LdapException;
  * Ldap 
  * 
  * @author  StoneMor Partners 
- */
+ **/
 class Ldap
 {
     protected $ldap;
@@ -22,7 +22,8 @@ class Ldap
     protected $userPassword;
     protected $auth;
     protected $adapter;
-    protected $roles = array();
+    protected $roles;
+    protected $emptyRoles = array('roles' => array());
 
     public function __construct(array $config, $appLogger)
     {
@@ -36,15 +37,15 @@ class Ldap
         $this->bindToServer();
     }
 
-    /* protected bindToServer(array $options)
-    /**
+    /** protected bindToServer(array $options)
+     *
      * bindToServer
      * 
      * @param null
      * @access protected
      * @return void
      * @TODO create a JSON error handler to override the default.
-     */
+     **/
     protected function bindToServer()
     {
         $tries = 0;
@@ -67,51 +68,82 @@ class Ldap
         }
     }
 
-    /* public findRolesForUser($user, $appName)
-    /**
+    /** public findRolesForUser($user, $appName)
+     *
      * findRolesForUser
      * return an array of assigned roles for user or null array if no roles
+     * performs a recursive group search and a direct member group search
      * 
      * @param string user 
      * @param string $appName 
      * @access public
      * @return array
-     */
+     **/
     public function findRolesForUser($user, $appName)
     {
-        $f1 = LdapFilter::equals('objectCategory', 'person');
-        $f2 = LdapFilter::equals('samaccountname', $user);
-        $searchString = LdapFilter::andFilter($f1, $f2);
+        $objectCatPersonFilter = LdapFilter::equals('objectCategory', 'person');
+        $samaccountNameFilter = LdapFilter::equals('samaccountname', $user);
+        $objectCatGroupFilter = LdapFilter::equals('ObjectCategory', 'group');
+        $searchString = LdapFilter::andFilter($objectCatPersonFilter, $samaccountNameFilter);
 
-        $appSearchPattern = '/.*OU=' . strtoupper($appName) . ',/i';
-        $roleSearchPattern = '/CN=(.*?),/i';
+        $recursiveMemberGroupFilter = 'member:1.2.840.113556.1.4.1941:'; //magic AD recurse number
+        $roleSearchPattern = '/cn=(.*?),ou=' . $appName . '+?,/i';
 
         $results = $this->ldap->searchEntries($searchString);
 
-        if (count($results) > 0 && array_key_exists('memberof', $results[0])) {
-          $members = $results[0]['memberof'];
+        foreach ($results as $result) {
+            $fullUserDN = $result['distinguishedname'][0];
+        }
 
-          foreach ($members as $member) {
-            if (preg_match($appSearchPattern, $member, $appMatch)) {
-              if (preg_match($roleSearchPattern, $appMatch[0], $roleMatch)) {
-                $this->roles[] = $roleMatch[1];
-              }
+        $f1 = LdapFilter::equals($recursiveMemberGroupFilter, $fullUserDN);
+        $results = $this->ldap->searchEntries($f1);
+
+        if (count($results) > 0) {
+            foreach ($results as $result) {
+                if (array_key_exists('memberof', $result)) {
+                    foreach ($result['memberof'] as $memberof) {
+                        if (preg_match($roleSearchPattern, $memberof, $roleMatches)) {
+                            $this->roles[] = trim($roleMatches[1]);
+                        }
+                    }
+                }
+
             }
-          }
 
-          if (count($this->roles) > 0) {
-            return array('roles' => $this->roles);
-          } else {
-            return array('roles' => array());
-          }
+            if (count($this->roles) > 0) {
+                return array('roles' => $this->roles);
 
+            } else {
+
+                //Are they direct members of a group/role
+                $directGroupMember = LdapFilter::equals('member', $fullUserDN);
+                $searchString = LdapFilter::andFilter($objectCatGroupFilter, $directGroupMember);
+                $results = $this->ldap->searchEntries($searchString);
+
+                if (count($results) > 0) {
+                    foreach ($results as $result) {
+                        if (preg_match($roleSearchPattern, $result['dn'], $roleMatches)) {
+                            $this->roles[] = trim($roleMatches[1]);
+                        }
+                    }
+
+                    if (count($this->roles) <= 0) {
+                        return $this->emptyRoles;
+                    }
+
+                } else {
+                    return $this->emptyRoles;
+                }
+
+                return array('roles' => $this->roles);
+            }
         } else {
-          return array('roles' => array());
+            return $this->emptyRoles;
         }
     }
 
-    /* public filterApproversByGroup($approvers, $filterGroup)
-    /**
+    /** public filterApproversByGroup($approvers, $filterGroup)
+     *
      * filterApproversByGroup
      * Filter approvers by a given group
      * 
@@ -119,7 +151,7 @@ class Ldap
      * @param string $filterGroup 
      * @access public
      * @return array
-     */
+     **/
     public function filterApproversByGroup(array $approvers, $filterGroup)
     {
         $filteredApprovers = array();
@@ -128,94 +160,106 @@ class Ldap
 
         foreach ($approvers as $approver) {
 
-          $f2 = LdapFilter::equals('samaccountname', $approver['username']);
-          $searchString = LdapFilter::andFilter($f1, $f2);
+            $f2 = LdapFilter::equals('samaccountname', $approver['username']);
+            $searchString = LdapFilter::andFilter($f1, $f2);
 
-          $appSearchPattern = '/.*CN=' . $filterGroup . ',/';
+            $appSearchPattern = '/.*CN=' . $filterGroup . ',/';
 
-          $results = $this->ldap->searchEntries($searchString);
+            $results = $this->ldap->searchEntries($searchString);
 
-          if (count($results) > 0 && array_key_exists('memberof', $results[0])) {
-            $memberOf = $results[0]['memberof'];
+            if (count($results) > 0 && array_key_exists('memberof', $results[0])) {
+                $memberOf = $results[0]['memberof'];
 
-            foreach ($memberOf as $member) {
-              if (preg_match($appSearchPattern, $member, $appMatch)) {
-                  $filteredApprovers[] = array('username' => strtolower($approver['username']),
-                                               'displayname' => $approver['displayname']
-                                              );
-              }
+                foreach ($memberOf as $member) {
+                    if (preg_match($appSearchPattern, $member, $appMatch)) {
+                        $filteredApprovers[] = array('username' => strtolower($approver['username']),
+                                                     'displayname' => $approver['displayname']
+                                                    );
+                    }
+                }
             }
-          }
         }
 
         if (count($filteredApprovers) > 0) {
-          return $filteredApprovers;
+            return $filteredApprovers;
         } else {
-          return array($filteredApprovers[] = array('username' => '', 'displayname' => ''));
+            return array($filteredApprovers[] = array('username' => '', 'displayname' => ''));
         }
     }
 
+    /** public getAppAuthorization($uname, $appname)
+     *
+     * getAppAuthorization
+     * 
+     * @param mixed $uname 
+     * @param mixed $appname 
+     * @access public
+     * @return void
+     **/
+    public function getAppAuthorization($uname, $appname)
+    {
+    }
 
-    /* public setLdapOptions(array $config)
-    /**
+    /** public setLdapOptions(array $config)
+     *
      * setLdapOptions
      * 
      * @param array $config 
      * @access public
      * @return void
-     */
+     **/
     public function setLdapOptions(array $config)
     {
         $this->ldapOptions = $config['ldap'];
     }
 
-    /* public setApplicationLogger($appLogger)
-    /**
+    /** public setApplicationLogger($appLogger)
+     *
      * setApplicationLogger
      * 
      * @param object $appLogger 
      * @access public
      * @return void
-     */
+     **/
     public function setApplicationLogger($appLogger)
     {
         $this->appLogger = $appLogger;
     }
 
-    /* public setUserName(array $config)
-    /**
+    /** public setUserName(array $config)
+     *
      * setUserName
      * 
      * @param array $config 
      * @access public
      * @return void
-     */
+     **/
     public function setUserName(array $config)
     {
         $this->userName = $config['client']['username'];
     }
 
-    /* public setUserPassword($config)
-    /**
+    /** public setUserPassword($config)
+     *
      * setUserPassword
      * 
      * @param mixed $config 
      * @access public
      * @return void
-     */
+     **/
     public function setUserPassword($config)
     {
         $this->userPassword = $config['client']['password'];
     }
 
-    /* public setLdapTries($config) {{{ */ 
-    /**
+    /** public setLdapTries($config)
+     *
      * setLdapTries
      * 
      * @param array $config 
      * @access public
      * @return void
-     */
+     **/
     public function setLdapTries($config)
     {
         $this->ldapTries = $config['ldaptries'];
