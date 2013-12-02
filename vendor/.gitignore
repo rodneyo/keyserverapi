@@ -1,4 +1,2 @@
 !.gitignore
-.composer
-composer
 *_generator.php
