@@ -57,22 +57,20 @@ abstract class ApiBaseController extends AbstractRestfulController
       return $urlParams;
     }
 
-    /* public checkAndRemoveTestEnv(array $checkData, $appname='')
+    /* public removeAdAppPrefix(array $checkData, $appname='')
     /**
-     * checkAndRemoveTestEnv
+     * removeAdAppPrefix
      * 
      * @param array $checkData 
      * @param string $appname 
      * @access public
      * @return array
      */
-    public function checkAndRemoveTestEnv(array $checkData, $appname='')
+    public function removeAdAppPrefix(array $checkData, $appname='')
     {
-        if ($this->testEnvironment) {
-          foreach ($checkData[0] as $key=>$value) {
+        foreach ($checkData[0] as $key=>$value) {
             $regex = '/' .  $appname . '\s*/i';
             $checkData[0][$key] = preg_replace($regex, '', $value);
-          }
         }
 		return $checkData;
     }
