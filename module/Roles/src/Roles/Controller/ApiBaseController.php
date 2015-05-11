@@ -42,6 +42,7 @@ abstract class ApiBaseController extends AbstractRestfulController
       if (array_key_exists('APPLICATION_ENV', $_SERVER)) {
         switch ($_SERVER['APPLICATION_ENV']) {
           case 'testing':
+          case 'dev':
           case 'development':
             $urlParams['appname'] .= '-test';
             $this->testEnvironment = True;

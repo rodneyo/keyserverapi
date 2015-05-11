@@ -12,6 +12,16 @@
  */
 
 return array(
+    'ldap' => array(
+        'server1' => array(
+            'accountCanonicalForm' => 3,
+            'networkTimeout' => 5
+        ),
+    ),
+    'ldaptries' => 6,
+    'filtergroups' => array(
+        'approverfilter' => 'DIPS-TEST Field Manager Approver Group'
+    ),
     'db1' => array(
       'driver'              => 'Pdo',
       'dsn'                 => 'mysql:dbname=apikey;host=127.0.0.1',
