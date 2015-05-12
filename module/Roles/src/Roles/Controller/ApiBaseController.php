@@ -122,7 +122,7 @@ abstract class ApiBaseController extends AbstractRestfulController
      */
     protected function getJson(array $data)
     {
-      return $jsonData = new JsonModel($data);
+      return new JsonModel($data);
     }
 
     /*
