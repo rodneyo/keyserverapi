@@ -40,10 +40,14 @@ class  RollUpStoredProcedure
      * @access public
      * @return array
      */
-    public function getLocationIdsByUser($username)
+    //public function getLocationIdsByUser($username)
+    public function getLocationIdsByUser($data)
     {
         $ctr = 0;
         $locations = array('locations' => array());
+        $username = $data['uname'];
+        $locationNames = [];
+
         try 
         {
            $statement = $this->rollUpDbAdapter->createStatement('call GetLocationsByUser(?)', array($username));
@@ -51,8 +55,14 @@ class  RollUpStoredProcedure
            foreach ($results as $result)
            {
              $locations['locations'][$ctr] = trim($result['location_code']);
+             $locationNames[] = trim($result['location_name']);
              $ctr++;
            }
+
+            if (array_key_exists('locnames', $data)) {
+                $locations['names'] = $locationNames;
+            }
+
            return $locations;
         }
         catch (\Exception $e)
