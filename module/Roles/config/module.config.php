@@ -39,29 +39,15 @@ return array(
             'roles' => array(
                 'type' => 'segment',
                 'options' => array(
-                  'route' => '/roles/[:uname]/[:appname][/:locanames]',
+                  'route' => '/roles/:uname/:appname[/:locnames]',
                   'constraints' => array(
-                    'uname' => '[a-zA-Z].+',
-                    'appname' => '[a-zA-Z0-9_-].+',
-                    'locnames' => '[a-zA-Z].+'
+                    'uname' => '[a-zA-Z]+',
+                    'appname' => '[a-zA-Z0-9_-]+',
+                    'locnames' => 'locnames*'
                  ),
                  'defaults' => array(
                      'controller' => 'Roles/Controller/RolesController'
                   ),
-                ),
-            ),
-            'roleslocs' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/roles/:uname/:appname/:locnames',
-                    'constraints' => array(
-                        'uname' => '[a-zA-Z].+',
-                        'appname' => '[a-zA-Z0-9_-].+',
-                        'locnames' => '[a-zA-Z].+'
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Roles/Controller/RolesController'
-                    ),
                 ),
             ),
         ),

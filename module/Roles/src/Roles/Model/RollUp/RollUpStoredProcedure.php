@@ -15,14 +15,11 @@ class  RollUpStoredProcedure
     protected $appLogger;
     protected $appErrorMessages;
 
-    /* public __construct($dbAdapter, $appLogger)
+
     /**
-     * __construct
-     * 
-     * @param object $dbAdapter  (injected from sm)
-     * @param object $appLogger (injected from sm)
-     * @access public
-     * @return void
+     * @param $dbAdapter
+     * @param $appLogger
+     * @param $appErrorMessages
      */
     public function __construct($dbAdapter, $appLogger, $appErrorMessages)
     {
@@ -31,16 +28,13 @@ class  RollUpStoredProcedure
         $this->appErrorMessages = $appErrorMessages;
     }
 
-    /* public getLocationIdsByUser($username)
-     *
-     * getLocationIdsByUser
-     *
+    /**
      * Return a list of location ids a user is assigned to
-     * @param string $username 
-     * @access public
+     * @param $data
+     *
      * @return array
+     * @throws \Exception
      */
-    //public function getLocationIdsByUser($username)
     public function getLocationIdsByUser($data)
     {
         $ctr = 0;
@@ -59,8 +53,9 @@ class  RollUpStoredProcedure
              $ctr++;
            }
 
+            // load location names when requested
             if (array_key_exists('locnames', $data)) {
-                $locations['names'] = $locationNames;
+                 $locations['names'] = $locationNames;
             }
 
            return $locations;
@@ -72,13 +67,11 @@ class  RollUpStoredProcedure
         }
     }
 
-    /* public getApproversByLocationId($location)
     /**
-     * getApproversByLocationId
-     * 
-     * @param mixed $location 
-     * @access public
+     * @param $location
+     *
      * @return array
+     * @throws \Exception
      */
     public function getApproversByLocationId($location)
     {
@@ -105,12 +98,10 @@ class  RollUpStoredProcedure
         }
     }
 
-    /* public getAllUsers()
+
     /**
-     * getAllUsers
-     * 
-     * @access public
      * @return array
+     * @throws \Exception
      */
     public function getAllUsers()
     {

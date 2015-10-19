@@ -18,7 +18,6 @@ abstract class ApiBaseController extends AbstractRestfulController
     protected $errorResponseMessage = 'Method Not Supported';
     public    $testEnvironment = False;
 
-    /* public isValidApiRequest($requestData)
     /**
      * isValidApiRequest
      * 
@@ -37,6 +36,13 @@ abstract class ApiBaseController extends AbstractRestfulController
         return $clientId;
     }
 
+    /**
+     * Append a -test to the end of the app name to find the
+     * appropriate application OU in AD
+     * @param $urlParams
+     *
+     * @return mixed
+     */
     public function detectRunTimeEnvironment($urlParams)
     {
       if (array_key_exists('APPLICATION_ENV', $_SERVER)) {
@@ -58,7 +64,6 @@ abstract class ApiBaseController extends AbstractRestfulController
       return $urlParams;
     }
 
-    /* public removeAdAppPrefix(array $checkData, $appname='')
     /**
      * removeAdAppPrefix
      * 
@@ -76,7 +81,6 @@ abstract class ApiBaseController extends AbstractRestfulController
 		return $checkData;
     }
 
-    /* public getClientAppTable()
     /**
      * getClientAppTable
      * 
@@ -95,7 +99,6 @@ abstract class ApiBaseController extends AbstractRestfulController
     }
 
 
-    /* public getClientTable()
     /**
      * getClientTable
      * 
@@ -113,9 +116,9 @@ abstract class ApiBaseController extends AbstractRestfulController
         return $this->clientTable;
     }
 
-    /* protected getJson($data)
+    /**
      * getJson
-     * 
+     *
      * @param mixed $data 
      * @access protected
      * @return zend JsonModel
