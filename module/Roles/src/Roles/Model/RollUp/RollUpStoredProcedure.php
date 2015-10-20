@@ -40,7 +40,7 @@ class  RollUpStoredProcedure
         $ctr = 0;
         $locations = array('locations' => array());
         $username = $data['uname'];
-        $locationNames = [];
+        $locationNames = array();
 
         try 
         {
