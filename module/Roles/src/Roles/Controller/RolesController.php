@@ -14,13 +14,11 @@ class RolesController extends ApiBaseController
         $this->ldap = $ldap;
     }
 
-    /* public get($data)
     /**
-     * get
-     * 
-     * @param mixed $data 
-     * @access public
-     * @return JSON
+     * @param mixed $data
+     *
+     * @return JsonModel
+     * @throws \Exception
      */
     public function get($data)
     {
@@ -29,7 +27,7 @@ class RolesController extends ApiBaseController
             $data = $this->detectRunTimeEnvironment($data);
 
             $roles = $this->ldap->findRolesForUser($data['uname'], $data['appname']);
-            $approvers = array($roles, $this->getLocationIdsByUser($data['uname']));
+            $approvers = array($roles, $this->getLocationIdsByUser($data));
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -45,17 +43,14 @@ class RolesController extends ApiBaseController
         return $this->getJson($approvers);
     }
 
-    /* public getLocationIdsByUser($user)
     /**
-     * getLocationIdsByUser
-     * 
-     * @param string user 
-     * @access public
-     * @return array
+     * @param array $data
+     *
+     * @return mixed
      * @TODO add to a factory and inject into controller
      */
-    public function getLocationIdsByUser($user)
+    public function getLocationIdsByUser($data)
     {
-        return $this->rollUpStoredProcedure->getLocationIdsByUser($user);
+        return $this->rollUpStoredProcedure->getLocationIdsByUser($data);
     }
 }

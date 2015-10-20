@@ -39,13 +39,14 @@ return array(
             'roles' => array(
                 'type' => 'segment',
                 'options' => array(
-                  'route' => '/roles/:uname/:appname',
+                  'route' => '/roles/:uname/:appname[/:locnames]',
                   'constraints' => array(
-                    'uname' => '[a-zA-Z].+',
-                    'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    'uname' => '[a-zA-Z]+',
+                    'appname' => '[a-zA-Z0-9_-]+',
+                    'locnames' => 'locnames*'
                  ),
                  'defaults' => array(
-                     'controller' => 'Roles/Controller/RolesController',
+                     'controller' => 'Roles/Controller/RolesController'
                   ),
                 ),
             ),
