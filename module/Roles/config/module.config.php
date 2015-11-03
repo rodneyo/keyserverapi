@@ -41,7 +41,7 @@ return array(
                 'options' => array(
                   'route' => '/roles/:uname/:appname[/:locnames]',
                   'constraints' => array(
-                    'uname' => '[a-zA-Z]+',
+                    'uname' => '[a-zA-Z0-9]+',
                     'appname' => '[a-zA-Z0-9_-]+',
                     'locnames' => 'locnames*'
                  ),
