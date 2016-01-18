@@ -7,11 +7,12 @@ vagrantfile:
         memory: '512'
         cpus: '1'
         chosen_provider: vmware_fusion
+        box_version: ''
         network:
             private_network: 192.168.57.102
             forwarded_port:
-                vflnp_s79mvo73k5g4:
-                    host: '6833'
+                vflnp_czkqfupvrwdp:
+                    host: '7274'
                     guest: '22'
         post_up_message: ''
         provider:
@@ -22,18 +23,18 @@ vagrantfile:
             vmware:
                 numvcpus: 1
             parallels:
-                cpus: 1
+                use_linked_clone: '0'
+                check_guest_tools: '0'
+                update_guest_tools: '0'
         provision:
             puppet:
-                manifests_path: puphpet/puppet
-                manifest_file: site.pp
+                manifests_path: puphpet/puppet/manifests
                 module_path: puphpet/puppet/modules
                 options:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
-                    - '--parser future'
         synced_folder:
-            vflsf_t4t0tmern3bu:
+            vflsf_67r5ep4deqx2:
                 source: ./
                 target: /var/www/keyserver
                 sync_type: default
@@ -65,12 +66,21 @@ vagrantfile:
         forward_agent: false
         forward_x11: false
         shell: 'bash -l'
+        insert_key: false
     vagrant:
         host: detect
+    proxy:
+        http: ''
+        https: ''
+        ftp: ''
+        no_proxy: ''
+        enabled: ''
 server:
     install: '1'
     packages:
         - vim
+        - htop
+        - git
 users_groups:
     install: '1'
     groups: {  }
@@ -78,7 +88,7 @@ users_groups:
 locale:
     install: '1'
     settings:
-        default_locale: ''
+        default_locale: en_US.UTF-8
         locales:
             - en_GB.UTF-8
             - en_US.UTF-8
@@ -94,9 +104,13 @@ nginx:
         default_vhost: 1
         proxy_buffer_size: 128k
         proxy_buffers: '4 256k'
+        proxy_connect_timeout: 600s
+        proxy_send_timeout: 600s
+        proxy_read_timeout: 600s
+        names_hash_bucket_size: 128
     upstreams: {  }
     vhosts:
-        nxv_cin2jpj5ww9e:
+        nxv_itt1o6sqz5zp:
             server_name: awesome.dev
             server_aliases:
                 - www.awesome.dev
@@ -116,7 +130,7 @@ nginx:
             rewrite_to_https: '1'
             spdy: '1'
             locations:
-                nxvl_7api4a4zlj6c:
+                nxvl_1q1ysgl0urr5:
                     location: /
                     autoindex: 'off'
                     internal: 'false'
@@ -127,7 +141,9 @@ nginx:
                     fastcgi: ''
                     fastcgi_index: ''
                     fastcgi_split_path: ''
-                nxvl_3f4zmi2x9f5h:
+                    proxy: ''
+                    proxy_redirect: ''
+                nxvl_o6y06vnfe0og:
                     location: '~ \.php$'
                     autoindex: 'off'
                     internal: 'false'
@@ -141,10 +157,15 @@ nginx:
                     fast_cgi_params_extra:
                         - 'SCRIPT_FILENAME $request_filename'
                         - 'APP_ENV dev'
+                    set:
+                        - '$path_info $fastcgi_path_info'
+                    proxy: ''
+                    proxy_redirect: ''
     proxies: {  }
 apache:
     install: '1'
     settings:
+        version: 2.4
         user: www-data
         group: www-data
         default_vhost: true
@@ -155,14 +176,16 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_ot2a13g3ga9a:
+        av_bhjtb8rai3oq:
             servername: keyserver.stonemor.local
             serveraliases:
-                - keyserver.local
+                - www.keyserver.stonemor.local
             docroot: /var/www/keyserver/public
             port: '80'
             setenv:
                 - 'APPLICATION_ENV development'
+            setenvif:
+                - 'Authorization "(.*)" HTTP_AUTHORIZATION=$1'
             custom_fragment: ''
             ssl: '0'
             ssl_cert: ''
@@ -172,7 +195,7 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_7hsamwrv9zpv:
+                avd_fknjxbk0axp3:
                     path: /var/www/keyserver
                     options:
                         - Indexes
@@ -184,7 +207,7 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        avdfm_qm0n6g88yno4:
+                        avdfm_8wuw2qi0a14d:
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
@@ -198,10 +221,9 @@ php:
         php:
             - cli
             - intl
-            - mcrypt
-            - ldap
             - curl
-            - mysql
+            - ldap
+            - mcrypt
         pear: {  }
         pecl: {  }
     ini:
@@ -212,7 +234,7 @@ php:
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_q553c2mz2xx5:
+        phpfp_bb9hczbwy14b:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
@@ -248,19 +270,23 @@ xhprof:
     install: '0'
 wpcli:
     install: '0'
-    version: v0.19.0
+    version: v0.21.1
 drush:
     install: '0'
     version: 6.3.0
 ruby:
     install: '1'
-    versions: {  }
+    versions:
+        rv_y0t3dri71cj0:
+            version: 1.9.3
 python:
     install: '1'
     packages: {  }
     versions: {  }
 nodejs:
     install: '0'
+    settings:
+        version: '5'
     npm_packages: {  }
 hhvm:
     install: '0'
@@ -277,47 +303,47 @@ hhvm:
         display_errors: 'On'
         error_reporting: '-1'
         date.timezone: UTC
-mysql:
-    install: '1'
+mariadb:
+    install: '0'
     settings:
-        version: '5.6'
+        version: '10.1'
         root_password: '123'
         override_options: {  }
     adminer: 0
     users:
-        mysqlnu_ry3gvdbmj0fl:
+        mariadbnu_k6ce4hx1wqa3:
             name: dbuser
             password: '123'
     databases:
-        mysqlnd_9wbrhtbexasi:
-            name: apikey
-            sql: /var/www/keyserver/sql/apikey.sql
-        mysqlnd_nt6vs6wnlnuk:
-            name: rollup
-            sql: /var/www/keyserver/sql/rollup.sql
+        mariadbnd_57placewf9o6:
+            name: dbname
+            sql: ''
     grants:
-        mysqlng_e7diyjfo0s5c:
+        mariadbng_oq0vu3iyag79:
             user: dbuser
             table: '*.*'
             privileges:
                 - ALL
-mariadb:
-    install: '0'
+mysql:
+    install: '1'
     settings:
-        version: '10.0'
+        version: '5.5'
         root_password: '123'
         override_options: {  }
     adminer: 0
     users:
-        mariadbnu_1k74zs12sntn:
+        mysqlnu_2n526rtai3ca:
             name: dbuser
             password: '123'
     databases:
-        mariadbnd_ptp6hlei83r0:
-            name: dbname
-            sql: ''
+        mysqlnd_3wl39up7syxm:
+            name: rollup
+            sql: /var/www/keyserver/sql/rollup.sql
+        mysqlnd_rjnfkm3vpejm:
+            name: apikey
+            sql: /var/www/keyserver/sql/apikey.sql
     grants:
-        mariadbng_pbotrxw3xo4m:
+        mysqlng_f2s3o7mu16gs:
             user: dbuser
             table: '*.*'
             privileges:
@@ -327,7 +353,7 @@ postgresql:
     settings:
         global:
             encoding: UTF8
-            version: '9.3'
+            version: '9.4'
         server:
             postgres_password: '123'
     databases: {  }
@@ -340,24 +366,25 @@ mongodb:
         auth: 1
         bind_ip: 127.0.0.1
         port: '27017'
+    globals:
+        version: 2.6.0
     databases: {  }
 redis:
     install: '0'
     settings:
-        conf_port: '6379'
+        port: '6379'
 sqlite:
     install: '0'
     adminer: 0
     databases: {  }
-mailcatcher:
+mailhog:
     install: '1'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025
         http_ip: 0.0.0.0
-        http_port: '1080'
-        mailcatcher_path: /usr/local/rvm/wrappers/default
-        from_email_method: inline
+        http_port: '8025'
+        path: /usr/local/bin/mailhog
 beanstalkd:
     install: '0'
     settings:
@@ -379,8 +406,11 @@ rabbitmq:
 elastic_search:
     install: '0'
     settings:
-        version: 1.4.1
+        version: 2.1.0
         java_install: true
+    instances:
+        esi_lrg7uprzofbw:
+            name: es-01
 solr:
     install: '0'
     settings:

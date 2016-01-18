@@ -14,31 +14,31 @@
 return array(
     'ldap' => array(
         'server1' => array(
-            'host' => '[AD-SERVER-HOST-NAME]',                     // activedirectory.stonemor.com
-            'useSsl' => true,                                      // boolean true or false
-            'port' => 636,                                          // 389 non-ssl 636 ssl
-            'accountDomainName' => '[AD-DOMAIN.HOST]',              // stonemor.com
-            'accountDomainNameShort' => '[AD-SHORTNAME]',           // STONEMOR
-            'baseDn' => 'DC=[AD-DOMAIN],DC=[AD-HOST]',              // DC=stonemor,DC=com
+            'host' => '--AD-SERVER-HOST-NAME--',                     // activedirectory.stonemor.com
+            'useSsl' => --AD-LDAP-SSL--,                                      // boolean true or false
+            'port' => --AD-LDAP-PORT--,                                          // 389 non-ssl 636 ssl
+            'accountDomainName' => 'stonemor.local',              // stonemor.com
+            'accountDomainNameShort' => 'STONEMOR',           // STONEMOR
+            'baseDn' => 'DC=stonemor,DC=local',              // DC=stonemor,DC=com
         ),
     ),
     'db1' => array(
-        'username' => '[API-KEY-DB-USER]',
-        'password' => '[API-KEY-DB-PASSWORD]',
+        'username' => '--API-KEY-DB-USER--',
+        'password' => '--API-KEY-DB-PASSWORD--',
     ),
     'db2' => array(
-        'username' => '[ROLLUP-DB-USER]',
-        'password' => '[ROLLUP-DB-PASSWORD]',
+        'username' => '--ROLLUP-DB-USER--',
+        'password' => '--ROLLUP-DB-PASSWORD--',
     ),
     'client' => array(
-        'username' => '[AD-SYSTEM-USER]',
-        'password' => '[AD-SYSTEM-PASSWORD]',
+        'username' => '--AD-SYSTEM-USER--',
+        'password' => '--AD-SYSTEM-PASSWORD--',
     ),
     'service_manager' => array(
         'factories' => array(
             'Zend\Log' => function($sm) {
                 $log = new Zend\Log\Logger();
-                $writer = new Zend\Log\Writer\Stream('[KEYSERVER-API-LOG-LOCATION]');
+                $writer = new Zend\Log\Writer\Stream('--KEYSERVER-API-LOG-LOCATION--');
                 $log->addWriter($writer);
                 return $log;
             }
