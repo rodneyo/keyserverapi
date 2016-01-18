@@ -6,7 +6,6 @@ vagrantfile:
         hostname: keyserver.local
         memory: '512'
         cpus: '1'
-        chosen_provider: vmware_fusion
         network:
             private_network: 192.168.57.102
             forwarded_port:
@@ -280,7 +279,7 @@ hhvm:
 mysql:
     install: '1'
     settings:
-        version: '5.6'
+        version: '5.5'
         root_password: '123'
         override_options: {  }
     adminer: 0
