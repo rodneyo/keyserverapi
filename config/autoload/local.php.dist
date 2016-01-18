@@ -15,8 +15,8 @@ return array(
     'ldap' => array(
         'server1' => array(
             'host' => '--AD-SERVER-HOST-NAME--',                     // activedirectory.stonemor.com
-            'useSsl' => true,                                      // boolean true or false
-            'port' => 636,                                          // 389 non-ssl 636 ssl
+            'useSsl' => --AD-LDAP-SSL--,                                      // boolean true or false
+            'port' => --AD-LDAP-PORT--,                                          // 389 non-ssl 636 ssl
             'accountDomainName' => 'stonemor.local',              // stonemor.com
             'accountDomainNameShort' => 'STONEMOR',           // STONEMOR
             'baseDn' => 'DC=stonemor,DC=local',              // DC=stonemor,DC=com
