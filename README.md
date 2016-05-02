@@ -21,15 +21,15 @@ Docscan:    Used for role authorization
 CSI:        Used for role authorization
 
  -  End points
-    - roles/[username]/[appname]
-    - roles/[location]/[username]
-    - roles/allusers/[appname]
-    - locations/allusers/[appname]
+    - approvers/[location]/[appname]
+    - allusers/[appname]
+    - roles/[uname]/[appname]
  - Returns
-    - JSON object containing a list of roles from Active Directory
-    - JSON object containing a list of approvers from MySQL database
+    - JSON object containing a list of approvers for that location
     - JSON object containing a list of all users, email addresses and
       display names (dump from Active Directory)
+    - JSON object containing a list of locations and AD roles the user has 
+      been assigned to
 
 API Key Database
 -----------------
