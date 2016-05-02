@@ -29,7 +29,7 @@ CSI:        Used for role authorization
     - JSON object containing a list of all users, email addresses and
       display names (dump from Active Directory)
     - JSON object containing a list of locations and AD roles the user has 
-      been assigned to
+      been assigned to for an application
 
 API Key Database
 -----------------
