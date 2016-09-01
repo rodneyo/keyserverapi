@@ -78,9 +78,11 @@ be forth coming.
 1.  Start up the active directory (odinca) in VMware
 1.  The administrator password should be "Stonemor1"
 1.  Open power shell and type
+
 ```bash
 getmac /v
 ```
+
 1.  You should see something like below
 
 | Connection Name | Network Adapter | Physical Address | Transport Name |
@@ -89,11 +91,14 @@ getmac /v
 
 1.  Make note of the "Physical Address"
 1.  On your workstation/laptop open a terminal and sudo su -
+
 ```bash
 cd /Library/Preferences/VMware\ Fusion/vmnet8/
 vi dhcpd.conf
 ```
+
 1.  Jump down to the end of this file and enter the following
+
 ``` bash
 ####### VMNET DHCP Configuration. End of "DO NOT MODIFY SECTION" #######
  host OdinCA-2016 {
@@ -101,18 +106,23 @@ vi dhcpd.conf
    fixed-address 192.168.75.51;
  }
  ```
+ 
  1. Replace the "hardware ethernet" value with the value from the "Physical Address"
  1. Save it and exit out of the file
  1. Restart VMware network services.
+ 
  ```bash
  sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --stop
  sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start
  ```
+ 
 1.  Go back the active directory VM quest and reboot it
 1.  Login, open power shell and type the following
+
 ```bash
 ipconfig
 ```
+
 1. Check the the IPv4 Address.  It should be set to the IP that you entered in the VMware dhcp.conf file
 
 ```text
