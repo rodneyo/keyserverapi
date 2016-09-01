@@ -82,9 +82,11 @@ be forth coming.
 getmac /v
 ```
 1.  You should see something like below
+
 | Connection Name | Network Adapter | Physical Address | Transport Name |
 | --------------- | --------------- | ---------------- | -------------- |
 | Ethernet0       | Intel(R) 82574L | 00-0C-29-F5-47-B2 | \Device\Tcpip_{D3B63090-289A-4BA1-BC84-F860EFA1725B} |
+
 1.  Make note of the "Physical Address"
 1.  On your workstation/laptop open a terminal and sudo su -
 ```bash
@@ -112,7 +114,7 @@ vi dhcpd.conf
 ipconfig
 ```
 1. Check the the IPv4 Address.  It should be set to the IP that you entered in the VMware dhcp.conf file
-```bash
+```
 Ethernet adapter Ethernet0:
 
    Connection-specific DNS Suffix  . : localdomain
@@ -121,6 +123,7 @@ Ethernet adapter Ethernet0:
    Subnet Mask . . . . . . . . . . . : 255.255.255.0
    Default Gateway . . . . . . . . . : 192.168.75.2
 ```   
+
 1.  If the IP is different check your dhcp.conf file again to make sure the IP  matches.  Also check the synax of the
 dhcp.conf.  Ensure the indentation, brackests and semicolons are in their proper places
 
