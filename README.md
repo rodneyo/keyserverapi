@@ -114,7 +114,8 @@ vi dhcpd.conf
 ipconfig
 ```
 1. Check the the IPv4 Address.  It should be set to the IP that you entered in the VMware dhcp.conf file
-```
+
+```text
 Ethernet adapter Ethernet0:
 
    Connection-specific DNS Suffix  . : localdomain
