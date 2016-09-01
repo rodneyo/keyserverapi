@@ -1,31 +1,35 @@
 vagrantfile:
     target: local
     vm:
-        box: puphpet/ubuntu1404-x64
-        box_url: puphpet/ubuntu1404-x64
-        hostname: keyserver.local
-        memory: '512'
-        cpus: '1'
-        chosen_provider: vmware_fusion
-        box_version: ''
-        network:
-            private_network: 192.168.57.102
-            forwarded_port:
-                vflnp_czkqfupvrwdp:
-                    host: '7274'
-                    guest: '22'
-        post_up_message: ''
         provider:
-            virtualbox:
-                modifyvm:
-                    natdnshostresolver1: 'on'
-                showgui: '0'
-            vmware:
-                numvcpus: 1
-            parallels:
-                use_linked_clone: '0'
-                check_guest_tools: '0'
-                update_guest_tools: '0'
+            local:
+                box: puphpet/ubuntu1404-x64
+                box_url: puphpet/ubuntu1404-x64
+                box_version: '0'
+                chosen_virtualizer: vmware_fusion
+                virtualizers:
+                    virtualbox:
+                        modifyvm:
+                            natdnshostresolver1: false
+                        showgui: 0
+                    vmware:
+                        numvcpus: 1
+                    parallels:
+                        use_linked_clone: 0
+                        check_guest_tools: 0
+                        update_guest_tools: 0
+                machines:
+                    vflm_okfvriaplgdy:
+                        id: keyserver
+                        hostname: keyserver.local
+                        network:
+                            private_network: 192.168.57.102
+                            forwarded_port:
+                                vflmnfp_er9slwiy83ew:
+                                    host: '9531'
+                                    guest: '22'
+                        memory: '512'
+                        cpus: '1'
         provision:
             puppet:
                 manifests_path: puphpet/puppet/manifests
@@ -34,7 +38,7 @@ vagrantfile:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
-            vflsf_67r5ep4deqx2:
+            vflsf_in4mox60yeo5:
                 source: ./
                 target: /var/www/keyserver
                 sync_type: default
@@ -42,6 +46,9 @@ vagrantfile:
                     smb_host: ''
                     smb_username: ''
                     smb_password: ''
+                    mount_options:
+                        dir_mode: '0775'
+                        file_mode: '0664'
                 rsync:
                     args:
                         - '--verbose'
@@ -56,17 +63,18 @@ vagrantfile:
         usable_port_range:
             start: 10200
             stop: 10500
+        post_up_message: ''
     ssh:
-        host: null
-        port: null
-        private_key_path: null
+        host: 'false'
+        port: 'false'
+        private_key_path: 'false'
         username: vagrant
-        guest_port: null
-        keep_alive: true
-        forward_agent: false
-        forward_x11: false
+        guest_port: 'false'
+        keep_alive: '1'
+        forward_agent: 'false'
+        forward_x11: 'false'
         shell: 'bash -l'
-        insert_key: false
+        insert_key: 'false'
     vagrant:
         host: detect
     proxy:
@@ -74,7 +82,6 @@ vagrantfile:
         https: ''
         ftp: ''
         no_proxy: ''
-        enabled: ''
 server:
     install: '1'
     packages:
@@ -92,6 +99,7 @@ locale:
         locales:
             - en_GB.UTF-8
             - en_US.UTF-8
+        timezone: US/Eastern
 firewall:
     install: '1'
     rules: {  }
@@ -110,7 +118,7 @@ nginx:
         names_hash_bucket_size: 128
     upstreams: {  }
     vhosts:
-        nxv_itt1o6sqz5zp:
+        nxv_u2tyjgcqmhpj:
             server_name: awesome.dev
             server_aliases:
                 - www.awesome.dev
@@ -130,10 +138,8 @@ nginx:
             rewrite_to_https: '1'
             spdy: '1'
             locations:
-                nxvl_1q1ysgl0urr5:
+                nxvl_hg4hvt7x857z:
                     location: /
-                    autoindex: 'off'
-                    internal: 'false'
                     try_files:
                         - $uri
                         - $uri/
@@ -143,10 +149,8 @@ nginx:
                     fastcgi_split_path: ''
                     proxy: ''
                     proxy_redirect: ''
-                nxvl_o6y06vnfe0og:
+                nxvl_pu7mkaef4wdg:
                     location: '~ \.php$'
-                    autoindex: 'off'
-                    internal: 'false'
                     try_files:
                         - $uri
                         - $uri/
@@ -176,7 +180,7 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_bhjtb8rai3oq:
+        av_vyhbi4q7q7wa:
             servername: keyserver.stonemor.local
             serveraliases:
                 - www.keyserver.stonemor.local
@@ -195,7 +199,7 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_fknjxbk0axp3:
+                avd_d6g48ut1klz2:
                     path: /var/www/keyserver
                     options:
                         - Indexes
@@ -207,12 +211,17 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        avdfm_8wuw2qi0a14d:
+                        avdfm_k6vuz22mbveu:
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
                             provider: filesmatch
                     provider: directory
+letsencrypt:
+    install: '1'
+    settings:
+        email: ''
+    domains: {  }
 php:
     install: '1'
     settings:
@@ -234,7 +243,7 @@ php:
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_bb9hczbwy14b:
+        phpfp_1re6hxftugj6:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
@@ -273,12 +282,18 @@ wpcli:
     version: v0.21.1
 drush:
     install: '0'
-    version: 6.3.0
+    version: 8.0.5
 ruby:
     install: '1'
     versions:
-        rv_y0t3dri71cj0:
+        rv_qp49rmxmhlro:
+            default: '0'
+            bundler: '0'
             version: 1.9.3
+            gems:
+                - deep_merge@1.0.1
+                - activesupport@4.2.6
+                - vine@0.2
 python:
     install: '1'
     packages: {  }
@@ -311,15 +326,15 @@ mariadb:
         override_options: {  }
     adminer: 0
     users:
-        mariadbnu_k6ce4hx1wqa3:
+        mariadbnu_4433xk32o0ec:
             name: dbuser
             password: '123'
     databases:
-        mariadbnd_57placewf9o6:
+        mariadbnd_3yq0un8xi9vl:
             name: dbname
             sql: ''
     grants:
-        mariadbng_oq0vu3iyag79:
+        mariadbng_6jz4p5i66gl3:
             user: dbuser
             table: '*.*'
             privileges:
@@ -327,23 +342,23 @@ mariadb:
 mysql:
     install: '1'
     settings:
-        version: '5.5'
+        version: '5.6'
         root_password: '123'
         override_options: {  }
     adminer: 0
     users:
-        mysqlnu_2n526rtai3ca:
+        mysqlnu_9ivhw71f640b:
             name: dbuser
             password: '123'
     databases:
-        mysqlnd_3wl39up7syxm:
+        mysqlnd_c82oloxhig7d:
             name: rollup
             sql: /var/www/keyserver/sql/rollup.sql
-        mysqlnd_rjnfkm3vpejm:
+        mysqlnd_zg8srisi9vw8:
             name: apikey
             sql: /var/www/keyserver/sql/apikey.sql
     grants:
-        mysqlng_f2s3o7mu16gs:
+        mysqlng_a0651pepcrej:
             user: dbuser
             table: '*.*'
             privileges:
@@ -363,7 +378,6 @@ postgresql:
 mongodb:
     install: '0'
     settings:
-        auth: 1
         bind_ip: 127.0.0.1
         port: '27017'
     globals:
@@ -378,7 +392,7 @@ sqlite:
     adminer: 0
     databases: {  }
 mailhog:
-    install: '1'
+    install: '0'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025
@@ -406,10 +420,10 @@ rabbitmq:
 elastic_search:
     install: '0'
     settings:
-        version: 2.1.0
+        version: 2.3.1
         java_install: true
     instances:
-        esi_lrg7uprzofbw:
+        esi_k1in6hmztd4w:
             name: es-01
 solr:
     install: '0'
