@@ -64,9 +64,11 @@ Running/Configuring Odinca (active directory) for Development
      - **You should copy this folder to your workstation/laptop first before importing**
 1.  This will take several minutes depending on the speed of your machine
 1.  When are asked to enter the name for the new guest type:
+
 ```bash
 OdinCA-2016
 ```
+
 1.  After successful import you will need to update the network settings for the VM to share it with your machine. Basically creating a "Bridged Network".  If you are 
 unsure how to do this ask your team lead or someone in the operations group.
 1.  Reboot the VM and make sure network capabilities are working properly
