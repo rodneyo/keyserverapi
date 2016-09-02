@@ -110,6 +110,11 @@ vi dhcpd.conf
  ```
  
  1. Replace the "hardware ethernet" value with the value from the "Physical Address"
+ 1. **Important**
+    >  There must be no spaces in the host name of your VM
+    >  You must allocate an IP address that is outside the range defined inside the DO NOT MODIFY SECTION section. 
+    My range was set to range 192.168.167.128 192.168.167.254 so I can allocate any address under 192.168.167.128 
+    (which means 192.168.167.1 to 192.168.167.127 are available).
  1. Save it and exit out of the file
  1. Restart VMware network services.
  
@@ -118,7 +123,7 @@ vi dhcpd.conf
  sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start
  ```
  
-1.  Go back the active directory VM quest and reboot it
+1.  Go back the active directory VM quest and reboot it.  If this doesn't work completely close VMWare and restart it
 1.  Login, open power shell and type the following
 
 ```bash
