@@ -14,12 +14,12 @@
 return array(
     'ldap' => array(
         'server1' => array(
-            'host' => '--AD-SERVER-HOST-NAME--',                     // activedirectory.stonemor.com
-            'useSsl' => --AD-LDAP-SSL--,                                      // boolean true or false
-            'port' => --AD-LDAP-PORT--,                                          // 389 non-ssl 636 ssl
-            'accountDomainName' => 'stonemor.local',              // stonemor.com
-            'accountDomainNameShort' => 'STONEMOR',           // STONEMOR
-            'baseDn' => 'DC=stonemor,DC=local',              // DC=stonemor,DC=com
+            'host' => '--AD-SERVER-HOST-NAME--',                   // activedirectory.stonemor.com
+            'useSsl' => '--AD-LDAP-SSL--',                         // boolean true or false
+            'port' => '--AD-LDAP-PORT--',                          // 389 non-ssl 636 ssl
+            'accountDomainName' => 'stonemor.local',               // stonemor.com
+            'accountDomainNameShort' => 'STONEMOR',                // STONEMOR
+            'baseDn' => 'DC=stonemor,DC=local',                    // DC=stonemor,DC=com
         ),
     ),
     'db1' => array(
@@ -30,6 +30,12 @@ return array(
         'username' => '--ROLLUP-DB-USER--',
         'password' => '--ROLLUP-DB-PASSWORD--',
     ),
+    /**
+     * This is a service account used to bind the AD
+     * on the behalf of the user.  Username is usually
+     * "keyjobs" You will probably need to reset the password/unlock
+     * the account in your dev AD
+     */
     'client' => array(
         'username' => '--AD-SYSTEM-USER--',
         'password' => '--AD-SYSTEM-PASSWORD--',

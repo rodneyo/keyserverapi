@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ODINCA_AD_IP='192.168.75.50'
+ODINCA_AD_IP='192.168.75.51'
 
 LOCAL_CONFIG_FILE_PATH='/var/www/keyserver/config/autoload'
 LOCAL_CONFIG_FILE_DIST='local.php.dist'
