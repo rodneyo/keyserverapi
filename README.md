@@ -99,6 +99,23 @@ cd /Library/Preferences/VMware\ Fusion/vmnet8/
 vi dhcpd.conf
 ```
 
+1. In the dhcpd.conf file look for the following stanza and make note of the "range" line
+1. In the example below the range is:  range **192.168.75.128 192.168.75.254;** 
+1. This is the IP range that vmware will use to provision IP addresses to all guests
+1. This range will likely be different than the one shown
+
+```bash
+subnet 192.168.75.0 netmask 255.255.255.0 {
+    range 192.168.75.128 192.168.75.254;
+    option broadcast-address 192.168.75.255;
+    option domain-name-servers 192.168.75.2;
+    option domain-name localdomain;
+    default-lease-time 1800;                # default is 30 minutes
+    max-lease-time 7200;                    # default is 2 hours
+    option netbios-name-servers 192.168.75.2;
+    option routers 192.168.75.2;
+  }
+```
 1.  Jump down to the end of this file and enter the following
 
 ``` bash
@@ -110,13 +127,15 @@ vi dhcpd.conf
  ```
  
  1. Replace the "hardware ethernet" value with the value from the "Physical Address"
+ 1. Replace the IP for **fixed-address** with an IP address that is outside the IP range specified in the subnet stanza displayed above 
+    > My range was set to range 192.168.167.128 192.168.167.254 so I can allocate any address under 192.168.167.128 
+    > (which means 192.168.167.1 to 192.168.167.127 are available)
+ 
  1. **Important**
     >  There must be no spaces in the host name of your VM
-    >  You must allocate an IP address that is outside the range defined inside the DO NOT MODIFY SECTION section. 
-    My range was set to range 192.168.167.128 192.168.167.254 so I can allocate any address under 192.168.167.128 
-    (which means 192.168.167.1 to 192.168.167.127 are available).
  1. Save it and exit out of the file
  1. Restart VMware network services.
+    > If this is the first time you are modifying the network services for VMware Fusion you should reboot after saving the changes described above.
  
  ```bash
  sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --stop
