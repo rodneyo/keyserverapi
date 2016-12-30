@@ -1,3 +1,5 @@
+# noinspection SqlNoDataSourceInspectionForFile
+
 -- MySQL dump 10.13  Distrib 5.5.41, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: rollup
@@ -251,7 +253,7 @@ BEGIN
 
 declare rtnData varchar(100);
 
-set rtnData = NULL;	
+set rtnData = NULL;
 
 select
 um1.carlib_key
@@ -294,7 +296,7 @@ BEGIN
 
 declare rtnData varchar(100);
 
-set rtnData = NULL;	
+set rtnData = NULL;
 
 select
 um1.unit_name
@@ -337,7 +339,7 @@ BEGIN
 
 declare rtnData varchar(50);
 
-set rtnData = NULL;	
+set rtnData = NULL;
 
 select
 usrm.display_name
@@ -353,8 +355,8 @@ join user_assignments ua1 on um1.id = ua1.unit_id
 join user_master usrm on ua1.user_id = usrm.id
 where
 ut1.trunk_id = inTrunkId and ut1.unit_type = inUnitType and
-um2.carlib_key = inLocation and ut2.unit_type = 'Location' and 
-ua1.responsible_user = 1 
+um2.carlib_key = inLocation and ut2.unit_type = 'Location' and
+ua1.responsible_user = 1
 limit 1;
 
 return rtnData;
@@ -449,7 +451,7 @@ DeleteUnit_label:BEGIN
 
 declare recCount int(11);
 declare pruneErrDesc varchar(100);
-declare exit handler for 1451 
+declare exit handler for 1451
 
 begin
 set outErrDesc = "Cannot delete unit that has user assignments";
@@ -511,7 +513,7 @@ declare recCount int(11);
 declare userMasterId int(11);
 
 
-declare exit handler for sqlexception 
+declare exit handler for sqlexception
 begin
   set outErrDesc = 'Unknown error. Transaction rolled back';
   rollback;
@@ -539,14 +541,14 @@ end if;
 
 
 
-delete from user_assignments where 
+delete from user_assignments where
 	user_id = userMasterId;
 
 
 delete from user_master
 	where id = userMasterId;
 
-commit;  
+commit;
 
 end ;;
 DELIMITER ;
@@ -573,7 +575,7 @@ DeleteUser_label:begin
 declare userMasterId int(11);
 
 
-declare exit handler for sqlexception 
+declare exit handler for sqlexception
 begin
   set outErrDesc = 'Unknown error. Transaction rolled back';
   rollback;
@@ -601,14 +603,14 @@ end if;
 
 
 
-delete from user_assignments where 
+delete from user_assignments where
 	user_id = userMasterId;
 
 
 delete from user_master
 	where id = userMasterId;
 
-commit;  
+commit;
 
 end ;;
 DELIMITER ;
@@ -630,7 +632,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAllUsers`()
 BEGIN
 
 select user_profile, display_name, email
-from user_master 
+from user_master
 where status = true
 order by user_profile;
 
@@ -657,10 +659,10 @@ select distinct f.user_profile, f.display_name, f.email
 from unit_master as a
 	left join unit_relationships as b on (a.id)=(b.descendant_unit_id)
 	left join unit_master        as c on (b.ancestor_unit_id)=(c.id)
-	left join unit_type_master   as d on (c.unit_type_id)=(d.id) 
-	left join user_assignments   as e on (c.id)=(e.unit_id) 
-	left join user_master        as f on (e.user_id)=(f.id) 
-where a.carlib_key = inLocation and b.ancestor_unit_id <> b.descendant_unit_id and 
+	left join unit_type_master   as d on (c.unit_type_id)=(d.id)
+	left join user_assignments   as e on (c.id)=(e.unit_id)
+	left join user_master        as f on (e.user_id)=(f.id)
+where a.carlib_key = inLocation and b.ancestor_unit_id <> b.descendant_unit_id and
 	f.status = true
 order by d.trunk_id, d.sort_sequence;
 
@@ -687,10 +689,10 @@ BEGIN
 
 select a.carlib_key as location_code, a.unit_name as location_name
 from unit_master a
-	join user_master b on (inUserProfile)=(b.user_profile) 
-	join unit_type_master c on (a.unit_type_id)=(c.id) 
+	join user_master b on (inUserProfile)=(b.user_profile)
+	join unit_type_master c on (a.unit_type_id)=(c.id)
 where b.all_locations = true and b.status = true and c.unit_type = "Location"
-union 
+union
 
 select d.carlib_key as location_code, d.unit_name as location_name
 from user_assignments a
@@ -816,14 +818,14 @@ set outErrDesc = ' ';
 
 
 
-delete  
+delete
 	a
-from 
+from
 	unit_relationships as a
 	join unit_relationships as d on a.descendant_unit_id = d.descendant_unit_id
-	left join unit_relationships as x on x.ancestor_unit_id = d.ancestor_unit_id 
+	left join unit_relationships as x on x.ancestor_unit_id = d.ancestor_unit_id
 		and x.descendant_unit_id = a.ancestor_unit_id
-where 
+where
 	d.ancestor_unit_id = affectedUnit and x.ancestor_unit_id is null;
 
 END ;;
