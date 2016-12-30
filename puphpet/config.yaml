@@ -15,17 +15,17 @@ vagrantfile:
                     vmware:
                         numvcpus: 1
                     parallels:
-                        use_linked_clone: 0
+                        linked_clone: 0
                         check_guest_tools: 0
                         update_guest_tools: 0
                 machines:
-                    vflm_okfvriaplgdy:
+                    vflm_yxw651oalhlg:
                         id: keyserver
                         hostname: keyserver.local
                         network:
                             private_network: 192.168.57.102
                             forwarded_port:
-                                vflmnfp_er9slwiy83ew:
+                                vflmnfp_egx93xkehqq3:
                                     host: '9531'
                                     guest: '22'
                         memory: '512'
@@ -33,12 +33,14 @@ vagrantfile:
         provision:
             puppet:
                 manifests_path: puphpet/puppet/manifests
-                module_path: puphpet/puppet/modules
+                module_path:
+                    - puphpet/puppet/modules
+                    - puphpet/puppet/manifests
                 options:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
-            vflsf_in4mox60yeo5:
+            vflsf_7vsvlxkjmb0w:
                 source: ./
                 target: /var/www/keyserver
                 sync_type: default
@@ -109,25 +111,22 @@ cron:
 nginx:
     install: '0'
     settings:
+        version: present
         default_vhost: 1
-        proxy_buffer_size: 128k
         proxy_buffers: '4 256k'
+        proxy_buffer_size: 128k
         proxy_connect_timeout: 600s
         proxy_send_timeout: 600s
         proxy_read_timeout: 600s
         names_hash_bucket_size: 128
     upstreams: {  }
     vhosts:
-        nxv_u2tyjgcqmhpj:
+        nxv_szgt9qmguxj4:
             server_name: awesome.dev
             server_aliases:
                 - www.awesome.dev
             www_root: /var/www/awesome
             listen_port: '80'
-            index_files:
-                - index.html
-                - index.htm
-                - index.php
             client_max_body_size: 1m
             ssl: '0'
             ssl_cert: ''
@@ -138,7 +137,8 @@ nginx:
             rewrite_to_https: '1'
             spdy: '1'
             locations:
-                nxvl_hg4hvt7x857z:
+                nxvl_whymsu36cqrw:
+                    www_root: ''
                     location: /
                     try_files:
                         - $uri
@@ -149,7 +149,8 @@ nginx:
                     fastcgi_split_path: ''
                     proxy: ''
                     proxy_redirect: ''
-                nxvl_pu7mkaef4wdg:
+                nxvl_7ii32hktzl3c:
+                    www_root: ''
                     location: '~ \.php$'
                     try_files:
                         - $uri
@@ -180,7 +181,7 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_vyhbi4q7q7wa:
+        av_4wbnkjtxyxhn:
             servername: keyserver.stonemor.local
             serveraliases:
                 - www.keyserver.stonemor.local
@@ -199,7 +200,7 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_d6g48ut1klz2:
+                avd_78ns28804zga:
                     path: /var/www/keyserver
                     options:
                         - Indexes
@@ -211,7 +212,7 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        avdfm_k6vuz22mbveu:
+                        avdfm_nffn7dnxg4is:
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
@@ -225,7 +226,7 @@ letsencrypt:
 php:
     install: '1'
     settings:
-        version: '56'
+        version: '5.6'
     modules:
         php:
             - cli
@@ -243,7 +244,7 @@ php:
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_1re6hxftugj6:
+        phpfp_c8dj9alefbkj:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
@@ -285,15 +286,7 @@ drush:
     version: 8.0.5
 ruby:
     install: '1'
-    versions:
-        rv_qp49rmxmhlro:
-            default: '0'
-            bundler: '0'
-            version: 1.9.3
-            gems:
-                - deep_merge@1.0.1
-                - activesupport@4.2.6
-                - vine@0.2
+    versions: {  }
 python:
     install: '1'
     packages: {  }
@@ -305,7 +298,6 @@ nodejs:
     npm_packages: {  }
 hhvm:
     install: '0'
-    nightly: 0
     composer: '1'
     composer_home: ''
     settings: {  }
@@ -326,15 +318,15 @@ mariadb:
         override_options: {  }
     adminer: 0
     users:
-        mariadbnu_4433xk32o0ec:
+        mariadbnu_z6b3eiwymy4q:
             name: dbuser
             password: '123'
     databases:
-        mariadbnd_3yq0un8xi9vl:
+        mariadbnd_er8u38nat7qe:
             name: dbname
             sql: ''
     grants:
-        mariadbng_6jz4p5i66gl3:
+        mariadbng_smamseumuyph:
             user: dbuser
             table: '*.*'
             privileges:
@@ -347,18 +339,18 @@ mysql:
         override_options: {  }
     adminer: 0
     users:
-        mysqlnu_9ivhw71f640b:
+        mysqlnu_767ci9iemucg:
             name: dbuser
             password: '123'
     databases:
-        mysqlnd_c82oloxhig7d:
+        mysqlnd_w3rn8goe6mxo:
             name: rollup
             sql: /var/www/keyserver/sql/rollup.sql
-        mysqlnd_zg8srisi9vw8:
+        mysqlnd_f0b5g6hggpxy:
             name: apikey
             sql: /var/www/keyserver/sql/apikey.sql
     grants:
-        mysqlng_a0651pepcrej:
+        mysqlng_gp42992o6lgp:
             user: dbuser
             table: '*.*'
             privileges:
@@ -423,7 +415,7 @@ elastic_search:
         version: 2.3.1
         java_install: true
     instances:
-        esi_k1in6hmztd4w:
+        esi_9xu909g3fbae:
             name: es-01
 solr:
     install: '0'

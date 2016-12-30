@@ -85,7 +85,7 @@
             "zendframework/zendpdf": "ZendPdf for creating PDF representations of barcodes",
             "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
         },
-        "time": "2013-08-26 15:09:04",
+        "time": "2013-08-26T15:09:04+00:00",
         "bin": [
             "bin/classmap_generator.php",
             "bin/pluginmap_generator.php",
