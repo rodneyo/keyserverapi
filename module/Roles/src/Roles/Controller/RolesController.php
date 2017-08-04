@@ -27,7 +27,13 @@ class RolesController extends ApiBaseController
             $data = $this->detectRunTimeEnvironment($data);
 
             $roles = $this->ldap->findRolesForUser($data['uname'], $data['appname']);
-            $approvers = array($roles, $this->getLocationIdsByUser($data));
+            $locations = $this->getLocationIdsByUser($data);
+
+            $hasAllLocations = $this->checkAllLocations($data);
+            die(var_dump($hasAllLocations));
+            $all_locations = array("all_locations" => $hasAllLocations);
+
+            $approvers = array($roles, $locations, $all_locations);
         }
         catch (\Exception $e) {
           $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
@@ -52,5 +58,16 @@ class RolesController extends ApiBaseController
     public function getLocationIdsByUser($data)
     {
         return $this->rollUpStoredProcedure->getLocationIdsByUser($data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return boolean
+     * @TODO add to a factory and inject into controller
+     */
+    public function checkAllLocations($data)
+    {
+        return $this->rollUpStoredProcedure->checkAllLocations($data);
     }
 }

@@ -46,6 +46,7 @@ class  RollUpStoredProcedure
         {
            $statement = $this->rollUpDbAdapter->createStatement('call GetLocationsByUser(?)', array($username));
            $results = $statement->execute();
+
            foreach ($results as $result)
            {
              $locations['locations'][$ctr] = trim($result['location_code']);
@@ -64,6 +65,35 @@ class  RollUpStoredProcedure
         {
             $this->appLogger->crit($e);
             throw new \Exception($this->appErrorMessages['getLocationsByUser']);
+        }
+    }
+
+    /**
+     * Return a true/false if the user has all locations
+     * @param $data
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function checkAllLocations($data)
+    {
+        $username = $data['uname'];
+
+        try
+        {
+            $statement = $this->rollUpDbAdapter->createStatement('SELECT all_locations FROM rollup.user_master WHERE user_profile = ?', array($username));
+            $results = $statement->execute();
+            $all_locations_field = $results->current();
+
+
+
+            return $all_locations_field;
+
+        }
+        catch (\Exception $e)
+        {
+            $this->appLogger->crit($e);
+            throw new \Exception($this->appErrorMessages['checkAllLocations']);
         }
     }
 
