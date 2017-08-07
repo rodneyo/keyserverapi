@@ -69,7 +69,7 @@ class  RollUpStoredProcedure
     }
 
     /**
-     * Return a true/false if the user has all locations
+     * Return value of all_locations for a user
      * @param $data
      *
      * @return bool
@@ -84,8 +84,6 @@ class  RollUpStoredProcedure
             $statement = $this->rollUpDbAdapter->createStatement('SELECT all_locations FROM rollup.user_master WHERE user_profile = ?', array($username));
             $results = $statement->execute();
             $all_locations_field = $results->current();
-
-
 
             return $all_locations_field;
 
