@@ -27,12 +27,15 @@ class RolesController extends ApiBaseController
             $data = $this->detectRunTimeEnvironment($data);
             // Get roles for user
             $roles = $this->ldap->findRolesForUser($data['uname'], $data['appname']);
+
             // Get locations for user
             $locations = $this->getLocationIdsByUser($data);
             // Check if user has all locations
             $hasAllLocations = $this->checkAllLocations($data);
 
-            if ($hasAllLocations["all_locations"] === "1") {
+            // Variable $data['aloc'] is an optional parameter in the route to this controller.
+            // Its purpose is to flag whether or not the all_locations key/value should be sent via JSON.
+            if ($hasAllLocations["all_locations"] === "1" && isset($data['aloc'])) {
                 // If user has all locations...
                 // Set variable to true...
                 $all_locations = array("all_locations" => true);

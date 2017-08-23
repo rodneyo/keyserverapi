@@ -13,3 +13,4 @@ tmp/
 build/*
 module/Roles/test/build/*
 *.vagrant
+config/autoload/local.php
