@@ -51,11 +51,12 @@ return array(
             'roles' => array(
                 'type' => 'segment',
                 'options' => array(
-                  'route' => '/roles/:uname/:appname[/:locnames]',
+                  'route' => '/roles/:uname/:appname[/:locnames][/:aloc]',
                   'constraints' => array(
                     'uname' => '[a-zA-Z0-9]+',
                     'appname' => '[a-zA-Z0-9_-]+',
-                    'locnames' => 'locnames*'
+                    'locnames' => 'locnames*',
+                    'aloc' => 'aloc*',
                  ),
                  'defaults' => array(
                      'controller' => 'Roles/Controller/RolesController'

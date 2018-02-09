@@ -69,6 +69,7 @@
 *.yaml text
 *.yml text
 .editorconfig text
+*.lic text
 
 # build config
 *.npmignore text
