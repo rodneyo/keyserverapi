@@ -33,5 +33,6 @@ return array(
     'appErrorMessages' => array(
        'getLocationsByUser'  => 'Problem encountered retrieving locations',
        'getApproversByLocation'  => 'Problem retrieving field approvers',
+       'getAllLocations' => 'Problem retrieving data for all locations'
      ),
 );
