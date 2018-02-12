@@ -3,9 +3,11 @@ namespace Roles\Controller;
 
 use Roles\Model\RollUp\RollUpStoredProcedure;
 
-class AllUsersController extends ApiBaseController
+class AllLocationsController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
+    protected $ldap;
+    protected $data;
 
     public function __construct(RollUpStoredProcedure $rollUpDbProcedure)
     {
@@ -22,25 +24,14 @@ class AllUsersController extends ApiBaseController
     {
         try {
             $this->isValidApiRequest($data);
-
-            $data = array($this->getAllUsers());
+            $this->data =  $this->rollUpStoredProcedure->getAllLocations();
         }
         catch (\Exception $e) {
-          $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':'
-            . print_r($data,true);
+            $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode();
             $this->getServiceLocator()->get('Zend\Log')->crit($logData);
             throw new \Exception($e->getMessage());
         }
 
-        return $this->getJson($data);
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function getAllUsers()
-    {
-        return $this->rollUpStoredProcedure->getAllUsers();
+        return $this->getJson($this->data);
     }
 }
