@@ -176,11 +176,14 @@ class  RollUpStoredProcedure
             $results = $statement->execute();
             foreach ($results as $row)
             {
+                /**
                 $higherUnits = array_slice($row, 1);
 
                 $locationData[] = [
                     $row['carlib_key'] => [$higherUnits]
                 ];
+                 **/
+                $locationData['CorpstructData'][] = $row;
             }
             return $locationData;
         }
