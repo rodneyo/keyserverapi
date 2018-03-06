@@ -1,6 +1,6 @@
 <?php
 /**
- * Informs the service manager where to find the different controllers 
+ * Informs the service manager where to find the different controllers
  * and view files
  *
  * Controllers are invoked via closure factories in Module.php
@@ -24,6 +24,18 @@ return array(
                   ),
                 ),
             ),
+            'alllocations' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/alllocations/:appname',
+                    'constraints' => array(
+                        'appname' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Roles/Controller/AllLocationsController',
+                    ),
+                ),
+            ),
             'allusers' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -39,11 +51,12 @@ return array(
             'roles' => array(
                 'type' => 'segment',
                 'options' => array(
-                  'route' => '/roles/:uname/:appname[/:locnames]',
+                  'route' => '/roles/:uname/:appname[/:locnames][/:aloc]',
                   'constraints' => array(
                     'uname' => '[a-zA-Z0-9]+',
                     'appname' => '[a-zA-Z0-9_-]+',
-                    'locnames' => 'locnames*'
+                    'locnames' => 'locnames*',
+                    'aloc' => 'aloc*',
                  ),
                  'defaults' => array(
                      'controller' => 'Roles/Controller/RolesController'

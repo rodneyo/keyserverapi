@@ -1,22 +1,22 @@
 <?php
 namespace Roles\Controller;
 
+use Roles\Model\RollUp\RollUpStoredProcedure;
+
 class AllUsersController extends ApiBaseController
 {
     protected $rollUpStoredProcedure;
 
-    public function __construct($rollUpDbProcedure)
+    public function __construct(RollUpStoredProcedure $rollUpDbProcedure)
     {
         $this->rollUpStoredProcedure = $rollUpDbProcedure;
     }
 
-    /* public get($data)
     /**
-     * get
-     * 
-     * @param mixed $data 
-     * @access public
-     * @return JSON
+     * @param mixed $data
+     *
+     * @return mixed|zend
+     * @throws \Exception
      */
     public function get($data)
     {
@@ -26,21 +26,18 @@ class AllUsersController extends ApiBaseController
             $data = array($this->getAllUsers());
         }
         catch (\Exception $e) {
-          $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':' 
+          $logData = $e->getMessage() . ':' . $e->getFile() . ':' . $e->getCode() . ':'
             . print_r($data,true);
-            $this->getServiceLocator()->get('Zend\Log')->crit($logData); 
+            $this->getServiceLocator()->get('Zend\Log')->crit($logData);
             throw new \Exception($e->getMessage());
         }
 
         return $this->getJson($data);
     }
 
-    /* public getAllUsers()
     /**
-     * getAllUsers
-     * 
-     * @access public
-     * @return void
+     * @return array
+     * @throws \Exception
      */
     public function getAllUsers()
     {
