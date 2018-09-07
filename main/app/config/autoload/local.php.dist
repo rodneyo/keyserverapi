@@ -1,0 +1,54 @@
+<?php
+/**
+ * Local Configuration Override
+ *
+ * You can use this file for overriding configuration values from modules, etc.
+ * You would place values in here that are agnostic to the environment and not
+ * sensitive to security.
+ *
+ * @NOTE: In practice, this file is to be renamed to local.php and contain configurations
+ *      specific to the local envionment the app is running on.  This file SHOULD NOT be put
+ *      in version control.
+ */
+
+return array(
+    'ldap' => array(
+        'server1' => array(
+            'host' => '--AD-SERVER-HOST-NAME--',                   // activedirectory.stonemor.com
+            'useSsl' => '--AD-LDAP-SSL--',                         // boolean true or false
+            'port' => '--AD-LDAP-PORT--',                          // 389 non-ssl 636 ssl
+            'accountDomainName' => 'stonemor.com',               // stonemor.com
+            'accountDomainNameShort' => 'STONEMOR',                // STONEMOR
+            'baseDn' => 'DC=stonemor,DC=com',                    // DC=stonemor,DC=com
+        ),
+    ),
+    'db1' => array(
+        'username' => '--API-KEY-DB-USER--',
+        'password' => '--API-KEY-DB-PASSWORD--',
+    ),
+    'db2' => array(
+        'username' => '--ROLLUP-DB-USER--',
+        'password' => '--ROLLUP-DB-PASSWORD--',
+    ),
+    /**
+     * This is a service account used to bind the AD
+     * on the behalf of the user.  Username is usually
+     * "keyjobs" You will probably need to reset the password/unlock
+     * the account in your dev AD
+     */
+    'client' => array(
+        'username' => '--AD-SYSTEM-USER--',
+        'password' => '--AD-SYSTEM-PASSWORD--',
+    ),
+    'service_manager' => array(
+        'factories' => array(
+            'Zend\Log' => function($sm) {
+                $log = new Zend\Log\Logger();
+                $writer = new Zend\Log\Writer\Stream('--KEYSERVER-API-LOG-LOCATION--');
+                $log->addWriter($writer);
+                return $log;
+            }
+        )
+    )
+);
+
