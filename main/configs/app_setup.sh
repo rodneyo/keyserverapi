@@ -44,17 +44,8 @@ sed -i -e "s@--KEYSERVER-API-LOG-LOCATION--@/var/log/keyserver/keyserver.log@" $
 sed -i -e "s/--DB_USER_NAME--/$MYSQL_USER/" /root/configs/sql/init.sql
 sed -i -e "s/--DB_USER_PASSWORD--/$MYSQL_PASSWORD/" /root/configs/sql/init.sql
 
-## AD Dev IP
-AD_IP_EXISTS=$(cat /etc/hosts |grep $AD_SERVER_IP)
-if [[ ! $AD_IP_EXISTS ]]; then
-    echo "${AD_SERVER_IP}    ${AD_SERVER_HOST_NAME}" >> /etc/hosts
-    echo "Adding dev AD server ip: ${AD_SERVER_IP}"
-fi
-
 sed -i -e "s@--TEST USER--@$TEST_ROLES_USER@" /root/configs/sql/init.sql
 sed -i -e "s/--TEST EMAIL--/$TEST_ROLES_EMAIL/" /root/configs/sql/init.sql
-
-echo "check 1"
 
 mysql -u root -p$MYSQL_ROOT_PASSWORD < /root/configs/sql/init.sql
 mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -D apikey < /root/configs/sql/apikey.sql

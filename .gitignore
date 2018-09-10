@@ -16,4 +16,4 @@ module/Roles/test/build/*
 docker-compose.yml
 main/zend.lic
 main/app/config/autoload/local.php
-config/autoload/local.phpdocker-compose.yml
+config/autoload/local.php

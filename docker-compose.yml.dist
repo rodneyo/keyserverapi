@@ -14,10 +14,9 @@ services:
       MYSQL_PASSWORD: --DB_PASSWORD--
       MYSQL_ROOT_PASSWORD: --DB_ROOT_PASSWORD--
       MYSQL_DATABASE: rollup
-      AD_SERVER_IP: --AD_SERVER_IP_ADDRESS--
       AD_SERVER_HOST_NAME: --AD_SERVER_HOST_NAME--
-      AD_SYSTEM_USER: 'keyjobs'
-      AD_SYSTEM_PASSWORD: TrainTrack15
+      AD_SYSTEM_USER: --ENTER_LDAP_USER--
+      AD_SYSTEM_PASSWORD: --ENTER_LDAP_USER_PASSWORD--
       LOCAL_CONFIG_FILE_PATH: '/var/www/html/config/autoload'
       LOCAL_CONFIG_FILE_DIST: 'local.php.dist'
       LOCAL_CONFIG_FILE_ACTIVE: 'local.php'
