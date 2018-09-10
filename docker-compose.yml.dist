@@ -1,0 +1,31 @@
+version: '3'
+services:
+  main:
+    build:
+      context: main/.
+      args:
+        PROJECT_NAME: $PROJECT
+    stdin_open: true
+    tty: true
+    environment:
+      MYSQL_HOSTNAME: localhost
+      MYSQL_PORT: 3306
+      MYSQL_USER: --DB_USER--
+      MYSQL_PASSWORD: --DB_PASSWORD--
+      MYSQL_ROOT_PASSWORD: --DB_ROOT_PASSWORD--
+      MYSQL_DATABASE: rollup
+      AD_SERVER_HOST_NAME: --AD_SERVER_HOST_NAME--
+      AD_SYSTEM_USER: --ENTER_LDAP_USER--
+      AD_SYSTEM_PASSWORD: --ENTER_LDAP_USER_PASSWORD--
+      LOCAL_CONFIG_FILE_PATH: '/var/www/html/config/autoload'
+      LOCAL_CONFIG_FILE_DIST: 'local.php.dist'
+      LOCAL_CONFIG_FILE_ACTIVE: 'local.php'
+      TEST_ROLES_USER: --ENTER_TEST_USER--
+      TEST_ROLES_EMAIL: --ENTER_TEST_USER_EMAIL--
+      ERROR_LOG: '/var/log/keyserver/error.log'
+    ports:
+      - 80:80
+      - 3306:3306
+      - 10081:10081
+    volumes:
+      - ./main/app:/var/www/html

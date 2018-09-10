@@ -1,0 +1,11 @@
+.idea
+composer.phar
+
+clover.xml
+coveralls-upload.json
+phpunit.xml
+vendor/
+main/app/config/autoload/location-directory.json
+main/app/config/autoload/.DS_Store
+main/app/bin/data-load/exceptions/
+main/app/bin/data-load/raw-data/sbr-data.csv
