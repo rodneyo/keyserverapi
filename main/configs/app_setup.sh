@@ -41,8 +41,9 @@ sed -i -e "s/--AD-SYSTEM-PASSWORD--/$AD_SYSTEM_PASSWORD/" $LOCAL_CONFIG_FILE_PAT
 sed -i -e "s@--KEYSERVER-API-LOG-LOCATION--@/var/log/keyserver/keyserver.log@" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
 
 # Update MySQL user name and password in init script.
-sed -i -e "s/--DB_USER_NAME--/$MYSQL_USER/" /root/configs/sql/init.sql
-sed -i -e "s/--DB_USER_PASSWORD--/$MYSQL_PASSWORD/" /root/configs/sql/init.sql
+cp /root/configs/sql/init.sql.dist /root/configs/sql/init.sql
+sed -i -e "s@--DB_USER_NAME--@$MYSQL_USER@" /root/configs/sql/init.sql
+sed -i -e "s@--DB_USER_PASSWORD--@$MYSQL_PASSWORD@" /root/configs/sql/init.sql
 
 sed -i -e "s@--TEST USER--@$TEST_ROLES_USER@" /root/configs/sql/init.sql
 sed -i -e "s/--TEST EMAIL--/$TEST_ROLES_EMAIL/" /root/configs/sql/init.sql

@@ -14,7 +14,8 @@ RUN /bin/bash -c "debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root
 
 RUN /bin/bash -c "debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD'"
 
-RUN apt install -y \
+RUN apt update && \
+apt install -y \
 php7.2-ldap \
 sendmail
 
