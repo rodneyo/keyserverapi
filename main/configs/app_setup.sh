@@ -46,7 +46,7 @@ sed -i -e "s@--DB_USER_NAME--@$MYSQL_USER@" /root/configs/sql/init.sql
 sed -i -e "s@--DB_USER_PASSWORD--@$MYSQL_PASSWORD@" /root/configs/sql/init.sql
 
 sed -i -e "s@--TEST USER--@$TEST_ROLES_USER@" /root/configs/sql/init.sql
-sed -i -e "s@--TEST EMAIL--@$TEST_ROLES_EMAIL@" /root/configs/sql/init.sql
+sed -i -e "s/--TEST EMAIL--/$TEST_ROLES_EMAIL/" /root/configs/sql/init.sql
 
 mysql -u root -p$MYSQL_ROOT_PASSWORD < /root/configs/sql/init.sql
 mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -D apikey < /root/configs/sql/apikey.sql
