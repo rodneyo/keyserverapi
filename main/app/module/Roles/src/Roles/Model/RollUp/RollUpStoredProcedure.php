@@ -139,6 +139,7 @@ class  RollUpStoredProcedure
         {
             $sql = "select distinct 
                     um.carlib_key, trim(um.unit_name)                                  as unit_name, 
+                    lc.c_state,
                     trim(GetHigherLevelUnit(um.carlib_key,'Sales','SalesDivision'))    as sales_division,
                     trim(GetHigherLevelUserWithProfile(um.carlib_key,'Sales','SalesDivision'))    as sales_division_user,
                     trim(GetHigherLevelUnit(um.carlib_key,'Sales','SalesRegion'))      as sales_region,
@@ -167,6 +168,7 @@ class  RollUpStoredProcedure
                 from
                     unit_master um 
                     join unit_type_master utm on um.unit_type_id = utm.id 
+                    join location_credit lc on um.carlib_key = lc.c_carlib_key
                 where 
                     utm.unit_type = 'Location'
                 order by
