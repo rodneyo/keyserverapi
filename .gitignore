@@ -13,4 +13,7 @@ tmp/
 build/*
 module/Roles/test/build/*
 *.vagrant
+docker-compose.yml
+main/zend.lic
+main/app/config/autoload/local.php
 config/autoload/local.php
