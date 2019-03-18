@@ -164,7 +164,8 @@ class  RollUpStoredProcedure
                     trim(GetHigherLevelUnit(um.carlib_key,'Funeral','FHRegion'))       as fhmgmt_region,
                     trim(GetHigherLevelUserWithProfile(um.carlib_key,'Funeral','FHRegion'))       as fhmgmt_region_user,
                     trim(GetHigherLevelUnit(um.carlib_key,'Funeral','FHArea'))         as fhmgmt_area,
-                    trim(GetHigherLevelUserWithProfile(um.carlib_key,'Funeral','FHArea'))         as fhmgmt_area_user
+                    trim(GetHigherLevelUserWithProfile(um.carlib_key,'Funeral','FHArea'))         as fhmgmt_area_user,
+                    trim(GetHigherLevelUserWithProfile(um.carlib_key,'Admin','Location'))         as location_admin_user
                 from
                     unit_master um 
                     join unit_type_master utm on um.unit_type_id = utm.id 
