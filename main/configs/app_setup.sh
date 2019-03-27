@@ -25,28 +25,28 @@ cp $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_DIST $LOCAL_CONFIG_FILE_PATH/$LOCA
 
 ## use sed for variable replacement
 ## ldap
-sed -i -e "s/--AD-LDAP-PORT--/389/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--AD-LDAP-SSL--/false/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--AD-SERVER-HOST-NAME--/$AD_SERVER_HOST_NAME/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/AD_LDAP_PORT/389/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/AD_LDAP_SSL/false/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/AD_SERVER_HOST_NAME/$AD_SERVER_HOST_NAME/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
 
 ## Database
-sed -i -e "s/--API-KEY-DB-USER--/$MYSQL_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--API-KEY-DB-PASSWORD--/$MYSQL_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--ROLLUP-DB-USER--/$MYSQL_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--ROLLUP-DB-PASSWORD--/$MYSQL_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/API_KEY_DB_USER/$MYSQL_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/API_KEY_DB_PASSWORD/$MYSQL_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/ROLLUP_DB_USER/$MYSQL_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/ROLLUP_DB_PASSWORD/$MYSQL_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
 
 ## OdinCA system user. (allows keyserver api to bind to AD)
-sed -i -e "s/--AD-SYSTEM-USER--/$AD_SYSTEM_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s/--AD-SYSTEM-PASSWORD--/$AD_SYSTEM_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
-sed -i -e "s@--KEYSERVER-API-LOG-LOCATION--@/var/log/keyserver/keyserver.log@" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/AD_SYSTEM_USER/$AD_SYSTEM_USER/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s/AD_SYSTEM_PASSWORD/$AD_SYSTEM_PASSWORD/" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
+sed -i -e "s@KEYSERVER_API_LOG_LOCATION@/var/log/keyserver/keyserver.log@" $LOCAL_CONFIG_FILE_PATH/$LOCAL_CONFIG_FILE_ACTIVE
 
 # Update MySQL user name and password in init script.
 cp /root/configs/sql/init.sql.dist /root/configs/sql/init.sql
-sed -i -e "s@--DB_USER_NAME--@$MYSQL_USER@" /root/configs/sql/init.sql
-sed -i -e "s@--DB_USER_PASSWORD--@$MYSQL_PASSWORD@" /root/configs/sql/init.sql
+sed -i -e "s@DB_USER_NAME@$MYSQL_USER@" /root/configs/sql/init.sql
+sed -i -e "s@DB_USER_PASSWORD@$MYSQL_PASSWORD@" /root/configs/sql/init.sql
 
-sed -i -e "s@--TEST USER--@$TEST_ROLES_USER@" /root/configs/sql/init.sql
-sed -i -e "s/--TEST EMAIL--/$TEST_ROLES_EMAIL/" /root/configs/sql/init.sql
+sed -i -e "s@TEST USER@$TEST_ROLES_USER@" /root/configs/sql/init.sql
+sed -i -e "s/TEST EMAIL/$TEST_ROLES_EMAIL/" /root/configs/sql/init.sql
 
 mysql -u root -p$MYSQL_ROOT_PASSWORD < /root/configs/sql/init.sql
 mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -D apikey < /root/configs/sql/apikey.sql
@@ -54,6 +54,9 @@ mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -D rollup < /root/configs/sql/rollup.sql
 mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -D rollup < /root/configs/sql/definers.sql
 
 cat /root/configs/add_hosts >> /etc/hosts
+
+# Update addl-configs.conf with Application Environment variable from Docker-compose.
+sed -i -e "s/APPLICATION_ENV_CONFIG/$APPLICATION_ENV/" /etc/apache2/conf-available/addl-configs.conf
 
 curl https://getcomposer.org/download/1.5.2/composer.phar > /usr/local/bin/composer
 chmod +x /usr/local/bin/composer

@@ -8,6 +8,7 @@ services:
     stdin_open: true
     tty: true
     environment:
+      APPLICATION_ENV: 'development'
       MYSQL_HOSTNAME: localhost
       MYSQL_PORT: 3306
       MYSQL_USER: --DB_USER--
