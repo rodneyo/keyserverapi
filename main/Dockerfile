@@ -1,7 +1,7 @@
 #!/bin/bash
 FROM domdest/lamp_base
 
-LABEL MAINTAINER="ddest@stonemor.com"
+LABEL MAINTAINER="jptak@stonemor.com"
 
 ARG PROJECT_NAME
 ENV PROJECT_NAME=$PROJECT_NAME

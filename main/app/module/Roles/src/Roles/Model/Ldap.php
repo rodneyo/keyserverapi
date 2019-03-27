@@ -86,60 +86,34 @@ class Ldap
         $objectCatGroupFilter = LdapFilter::equals('ObjectCategory', 'group');
         $searchString = LdapFilter::andFilter($objectCatPersonFilter, $samaccountNameFilter);
 
-        $recursiveMemberGroupFilter = 'member:1.2.840.113556.1.4.1941:'; //magic AD recurse number
+//        $recursiveMemberGroupFilter = 'member:1.2.840.113556.1.4.1941:'; //magic AD recurse number
         $roleSearchPattern = '/cn=(.*?),ou=' . $appName . '+?,/i';
 
         $results = $this->ldap->searchEntries($searchString);
 
-        foreach ($results as $result) {
-            $fullUserDN = $result['distinguishedname'][0];
-        }
-
-        $f1 = LdapFilter::equals($recursiveMemberGroupFilter, $fullUserDN);
-        $results = $this->ldap->searchEntries($f1);
+        //Are they direct members of a group/role
+        $fullUserDN = $results[0]['distinguishedname'][0];
+        $directGroupMember = LdapFilter::equals('member', $fullUserDN);
+        $searchString = LdapFilter::andFilter($objectCatGroupFilter, $directGroupMember);
+        $results = $this->ldap->searchEntries($searchString);
 
         if (count($results) > 0) {
             foreach ($results as $result) {
-                if (array_key_exists('memberof', $result)) {
-                    foreach ($result['memberof'] as $memberof) {
-                        if (preg_match($roleSearchPattern, $memberof, $roleMatches)) {
-                            $this->roles[] = trim($roleMatches[1]);
-                        }
-                    }
+                if (preg_match($roleSearchPattern, $result['dn'], $roleMatches)) {
+                    $this->roles[] = trim($roleMatches[1]);
                 }
-
             }
 
-            if (count($this->roles) > 0) {
-                return array('roles' => $this->roles);
-
-            } else {
-
-                //Are they direct members of a group/role
-                $directGroupMember = LdapFilter::equals('member', $fullUserDN);
-                $searchString = LdapFilter::andFilter($objectCatGroupFilter, $directGroupMember);
-                $results = $this->ldap->searchEntries($searchString);
-
-                if (count($results) > 0) {
-                    foreach ($results as $result) {
-                        if (preg_match($roleSearchPattern, $result['dn'], $roleMatches)) {
-                            $this->roles[] = trim($roleMatches[1]);
-                        }
-                    }
-
-                    if (count($this->roles) <= 0) {
-                        return $this->emptyRoles;
-                    }
-
-                } else {
-                    return $this->emptyRoles;
-                }
-
-                return array('roles' => $this->roles);
+            if (count($this->roles) <= 0) {
+                return $this->emptyRoles;
             }
+
         } else {
             return $this->emptyRoles;
         }
+
+        return array('roles' => $this->roles);
+
     }
 
     /** public filterApproversByGroup($approvers, $filterGroup)

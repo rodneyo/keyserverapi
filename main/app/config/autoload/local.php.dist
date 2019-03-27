@@ -14,21 +14,21 @@
 return array(
     'ldap' => array(
         'server1' => array(
-            'host' => '--AD-SERVER-HOST-NAME--',                   // activedirectory.stonemor.com
-            'useSsl' => '--AD-LDAP-SSL--',                         // boolean true or false
-            'port' => '--AD-LDAP-PORT--',                          // 389 non-ssl 636 ssl
+            'host' => 'AD_SERVER_HOST_NAME',                   // activedirectory.stonemor.com
+            'useSsl' => 'AD_LDAP_SSL',                         // boolean true or false
+            'port' => 'AD_LDAP_PORT',                          // 389 non-ssl 636 ssl
             'accountDomainName' => 'stonemor.com',               // stonemor.com
             'accountDomainNameShort' => 'STONEMOR',                // STONEMOR
             'baseDn' => 'DC=stonemor,DC=com',                    // DC=stonemor,DC=com
         ),
     ),
     'db1' => array(
-        'username' => '--API-KEY-DB-USER--',
-        'password' => '--API-KEY-DB-PASSWORD--',
+        'username' => 'API_KEY_DB_USER',
+        'password' => 'API_KEY_DB_PASSWORD',
     ),
     'db2' => array(
-        'username' => '--ROLLUP-DB-USER--',
-        'password' => '--ROLLUP-DB-PASSWORD--',
+        'username' => 'ROLLUP_DB_USER',
+        'password' => 'ROLLUP_DB_PASSWORD',
     ),
     /**
      * This is a service account used to bind the AD
@@ -37,14 +37,14 @@ return array(
      * the account in your dev AD
      */
     'client' => array(
-        'username' => '--AD-SYSTEM-USER--',
-        'password' => '--AD-SYSTEM-PASSWORD--',
+        'username' => 'AD_SYSTEM_USER',
+        'password' => 'AD_SYSTEM_PASSWORD',
     ),
     'service_manager' => array(
         'factories' => array(
             'Zend\Log' => function($sm) {
                 $log = new Zend\Log\Logger();
-                $writer = new Zend\Log\Writer\Stream('--KEYSERVER-API-LOG-LOCATION--');
+                $writer = new Zend\Log\Writer\Stream('KEYSERVER_API_LOG_LOCATION');
                 $log->addWriter($writer);
                 return $log;
             }

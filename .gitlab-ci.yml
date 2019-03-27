@@ -1,0 +1,92 @@
+variables:
+  CI_APP_DIR: $CI_PROJECT_DIR/main/app
+  CI_APP_CONFIG_DIR: $CI_PROJECT_DIR/config
+  CI_AUTOLOAD_DIR: $CI_PROJECT_DIR/main/app/config/autoload
+
+image: gitlab-registry.stonemor.com:4567/docker-images/php:phpci-72
+
+stages:
+  - build
+  - test
+  - prod
+#  - scheduled_tasks
+#  - db_migrate
+
+before_script:
+    - cd $CI_APP_DIR
+    - rm -rf build
+    - rm -f init.sql
+    - rm -f LICENSE.txt
+    - composer install
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$DEPLOYER_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+build:
+  stage: build
+  script:
+    - echo  "building..."
+#    - mv phpunit.xml.dist phpunit.xml
+#    - phpunit --configuration phpunit.xml --coverage-text --colors=never
+  allow_failure: false
+
+deploy to test:
+  environment:
+    name: test
+##    - url: https://
+  stage: test
+  tags:
+    - dag
+  only:
+    - test
+  script:
+    - cd $CI_AUTOLOAD_DIR
+    - sed -i -e "s@AD_SERVER_HOST_NAME@$TEST_AD_SERVER_HOST_NAME@" local.php.dist
+    - sed -i -e "s@AD_LDAP_SSL@$AD_LDAP_SSL@" local.php.dist
+    - sed -i -e "s@AD_LDAP_PORT@$AD_LDAP_PORT@" local.php.dist
+    - sed -i -e "s@API_KEY_DB_USER@$TEST_API_KEY_DB_USER@" local.php.dist
+    - sed -i -e "s@API_KEY_DB_PASSWORD@$TEST_API_KEY_DB_PASSWORD@" local.php.dist
+    - sed -i -e "s@ROLLUP_DB_USER@$TEST_ROLLUP_DB_USER@" local.php.dist
+    - sed -i -e "s@ROLLUP_DB_PASSWORD@$TEST_ROLLUP_DB_PASSWORD@" local.php.dist
+    - sed -i -e "s@AD_SYSTEM_USER@$TEST_AD_SYSTEM_USER@" local.php.dist
+    - sed -i -e "s@AD_SYSTEM_PASSWORD@$TEST_AD_SYSTEM_PASSWORD@" local.php.dist
+    - sed -i -e "s@KEYSERVER_API_LOG_LOCATION@$KEYSERVER_API_LOG_LOCATION@" local.php.dist
+    - mv local.php.dist local.php
+    - cd $CI_APP_DIR
+    - rm -f ./composer.json ./composer.lock
+    - ssh -t deployer@$TEST_APP_HOST "sudo chmod -R 0770 $APP_DIR"
+    - rsync --stats --perms -rz --delete -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --rsync-path="sudo rsync" .  deployer@$TEST_APP_HOST:$APP_DIR
+    - ssh -t deployer@$TEST_APP_HOST "rm -rf $CACHE_DIR"
+    - ssh -t deployer@$TEST_APP_HOST "sudo chmod -R 0760 $APP_DIR/*; sudo chown -R $APP_OWNER\:deployer $APP_DIR/*"
+
+deploy to prod:
+  environment:
+    name: prod
+##    - url: https://
+  stage: prod
+  tags:
+    - dag
+  only:
+    - master
+  script:
+    - cd $CI_AUTOLOAD_DIR
+    - sed -i -e "s@AD_SERVER_HOST_NAME@$AD_SERVER_HOST_NAME@" local.php.dist
+    - sed -i -e "s@AD_LDAP_SSL@$AD_LDAP_SSL@" local.php.dist
+    - sed -i -e "s@AD_LDAP_PORT@$AD_LDAP_PORT@" local.php.dist
+    - sed -i -e "s@API_KEY_DB_USER@$API_KEY_DB_USER@" local.php.dist
+    - sed -i -e "s@API_KEY_DB_PASSWORD@$API_KEY_DB_PASSWORD@" local.php.dist
+    - sed -i -e "s@ROLLUP_DB_USER@$ROLLUP_DB_USER@" local.php.dist
+    - sed -i -e "s@ROLLUP_DB_PASSWORD@$ROLLUP_DB_PASSWORD@" local.php.dist
+    - sed -i -e "s@AD_SYSTEM_USER@$AD_SYSTEM_USER@" local.php.dist
+    - sed -i -e "s@AD_SYSTEM_PASSWORD@$AD_SYSTEM_PASSWORD@" local.php.dist
+    - sed -i -e "s@KEYSERVER_API_LOG_LOCATION@$KEYSERVER_API_LOG_LOCATION@" local.php.dist
+    - mv local.php.dist local.php
+    - cd $CI_APP_DIR
+    - rm -f ./composer.json ./composer.lock
+    - ssh -t deployer@$APP_HOST "sudo chmod -R 0770 $APP_DIR"
+    - rsync --stats --perms -rz --delete -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --rsync-path="sudo rsync" .  deployer@$APP_HOST:$APP_DIR
+    - ssh -t deployer@$APP_HOST "rm -rf $CACHE_DIR"
+    - ssh -t deployer@$APP_HOST "sudo chmod -R 0760 $APP_DIR/*; sudo chown -R $APP_OWNER\:deployer $APP_DIR/*"
+
